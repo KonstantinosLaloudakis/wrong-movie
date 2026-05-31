@@ -33,7 +33,7 @@ CREATE TABLE famous_roles (
   role_name          text NOT NULL,
   source_movie_title text NOT NULL,
   source_movie_year  int NOT NULL DEFAULT 0,
-  famousness_score   float NOT NULL DEFAULT 0.0,
+  famousness_score   float NOT NULL DEFAULT 0.0 CHECK (famousness_score >= 0.0 AND famousness_score <= 1.0),
   created_at         timestamptz NOT NULL DEFAULT now(),
   UNIQUE (actor_id, source_movie_title)
 );
@@ -53,7 +53,7 @@ CREATE TABLE clues (
   movie_id         uuid NOT NULL REFERENCES movies(id) ON DELETE CASCADE,
   clue_text        text NOT NULL,
   difficulty       clue_difficulty NOT NULL,
-  quality_score    float NOT NULL DEFAULT 0.0,
+  quality_score    float NOT NULL DEFAULT 0.0 CHECK (quality_score >= 0.0 AND quality_score <= 1.0),
   is_active        bool NOT NULL DEFAULT true,
   generation_model text NOT NULL,
   created_at       timestamptz NOT NULL DEFAULT now()
