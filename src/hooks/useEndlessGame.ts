@@ -51,8 +51,8 @@ export function useEndlessGame() {
     }
   }, [playedIds]);
 
-  function submitGuess(guess: string) {
-    if (!puzzle || state.result !== 'unanswered') return;
+  function submitGuess(guess: string): boolean {
+    if (!puzzle || state.result !== 'unanswered') return false;
 
     const correct = isCorrectGuess(
       guess,
@@ -65,14 +65,17 @@ export function useEndlessGame() {
     if (correct) {
       setSessionScore((s) => s + POINTS_MAP[state.revealedDifficulty]);
       setState({ ...state, guesses: newGuesses, result: 'correct' });
+      return true;
     } else if (currentIndex < DIFFICULTY_ORDER.length - 1) {
       setState({
         guesses: newGuesses,
         revealedDifficulty: DIFFICULTY_ORDER[currentIndex + 1],
         result: 'unanswered',
       });
+      return false;
     } else {
       setState({ ...state, guesses: newGuesses, result: 'wrong' });
+      return false;
     }
   }
 

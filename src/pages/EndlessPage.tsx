@@ -3,7 +3,6 @@ import { useEndlessGame } from '../hooks/useEndlessGame';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
-import { isCorrectGuess } from '../lib/guessMatch';
 
 export function EndlessPage() {
   const { puzzle, loading, sessionScore, state, fetchNext, submitGuess } =
@@ -23,10 +22,9 @@ export function EndlessPage() {
   }, []);
 
   function handleGuess(guess: string) {
-    if (!puzzle) return;
-    const correct = isCorrectGuess(guess, puzzle.normalizedTitle, puzzle.altTitles);
-    submitGuess(guess);
+    const correct = submitGuess(guess);
     if (!correct) {
+      if (shakeTimer.current) clearTimeout(shakeTimer.current);
       setShaking(true);
       shakeTimer.current = setTimeout(() => setShaking(false), 300);
     }
