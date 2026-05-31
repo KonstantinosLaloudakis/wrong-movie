@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Difficulty, GuessResult } from '../types';
 
 const CLUE_TRAIL: Record<Difficulty, string> = {
@@ -24,12 +24,23 @@ interface Props {
 
 export function ShareButton({ puzzleNumber, result, revealedDifficulty }: Props) {
   const [copied, setCopied] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   async function handleShare() {
-    const text = buildShareText(puzzleNumber, result, revealedDifficulty);
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      const text = buildShareText(puzzleNumber, result, revealedDifficulty);
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      timerRef.current = setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard unavailable (non-HTTPS or permission denied)
+    }
   }
 
   return (
