@@ -19,34 +19,36 @@ export function useEndlessGame() {
 
   const fetchNext = useCallback(async () => {
     setLoading(true);
+    setPuzzle(null);
     setState({ revealedDifficulty: 'hard', guesses: [], result: 'unanswered' });
 
     const { data, error } = await supabase.rpc('get_random_movie', {
       excluded_ids: playedIds,
     });
 
-    if (error || !data?.length) {
-      setPuzzle(null);
-      setLoading(false);
-      return;
-    }
+    try {
+      if (error || !data?.length) {
+        return;
+      }
 
-    const row = data[0];
-    setPuzzle({
-      puzzleNumber: 0,
-      movieId: row.movie_id,
-      title: row.title,
-      normalizedTitle: row.normalized_title,
-      altTitles: row.alt_titles ?? [],
-      posterUrl: row.poster_url ?? null,
-      clues: {
-        hard: { id: '', text: row.hard_clue, difficulty: 'hard' },
-        medium: { id: '', text: row.medium_clue, difficulty: 'medium' },
-        easy: { id: '', text: row.easy_clue, difficulty: 'easy' },
-      },
-    });
-    setPlayedIds((prev) => [...prev, row.movie_id]);
-    setLoading(false);
+      const row = data[0];
+      setPuzzle({
+        puzzleNumber: 0, // not applicable in endless mode
+        movieId: row.movie_id,
+        title: row.title,
+        normalizedTitle: row.normalized_title,
+        altTitles: row.alt_titles ?? [],
+        posterUrl: row.poster_url ?? null,
+        clues: {
+          hard: { id: '', text: row.hard_clue, difficulty: 'hard' },
+          medium: { id: '', text: row.medium_clue, difficulty: 'medium' },
+          easy: { id: '', text: row.easy_clue, difficulty: 'easy' },
+        },
+      });
+      setPlayedIds((prev) => [...prev, row.movie_id]);
+    } finally {
+      setLoading(false);
+    }
   }, [playedIds]);
 
   function submitGuess(guess: string) {
