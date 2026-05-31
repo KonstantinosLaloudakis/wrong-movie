@@ -30,7 +30,7 @@ def seed_actor_roles(supabase, actor: dict) -> int:
         release_date = credit.get("release_date") or ""
         year = int(release_date[:4]) if len(release_date) >= 4 else 0
 
-        supabase.table("famous_roles").upsert(
+        response = supabase.table("famous_roles").upsert(
             {
                 "actor_id": actor["id"],
                 "role_name": credit["character"],
@@ -40,14 +40,18 @@ def seed_actor_roles(supabase, actor: dict) -> int:
             },
             on_conflict="actor_id,source_movie_title",
         ).execute()
-        inserted += 1
+        if response.data:
+            inserted += 1
 
     return inserted
 
 
 def seed_famous_roles():
     supabase = get_client()
-    actors = supabase.table("actors").select("id,name,tmdb_id").execute().data
+    actors = supabase.table("actors").select("id,name,tmdb_id").execute().data or []
+    if not actors:
+        print("No actors found. Run seed_movies.py first.")
+        return
     print(f"Seeding famous roles for {len(actors)} actors...")
 
     for actor in actors:
