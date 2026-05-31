@@ -1,7 +1,7 @@
 import json
 import time
 
-MIN_CLUE_CONFIDENCE = 0.65  # matches config.py
+MIN_CLUE_CONFIDENCE = {"hard": 0.2, "medium": 0.4, "easy": 0.6}  # matches config.py
 
 PROMPT_TEMPLATE = """You are writing clues for a movie trivia game called "Wrong Movie".
 
@@ -53,17 +53,27 @@ def is_valid_clue(
     confidence: float,
     movie_title: str,
     character_names: list[str],
+    difficulty: str = "easy",
 ) -> bool:
-    if confidence < MIN_CLUE_CONFIDENCE:
+    threshold = MIN_CLUE_CONFIDENCE.get(difficulty, 0.6) if isinstance(MIN_CLUE_CONFIDENCE, dict) else MIN_CLUE_CONFIDENCE
+    if confidence < threshold:
         return False
     if len(clue_text.strip()) < 20:
         return False
-    if movie_title.lower() in clue_text.lower():
+    if movie_title and movie_title.lower() in clue_text.lower():
         return False
     for name in character_names:
         if name and name.lower() in clue_text.lower():
             return False
     return True
+
+
+def _strip_code_fences(text: str) -> str:
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+        text = text.rsplit("```", 1)[0]
+    return text.strip()
 
 
 def _call_llm(prompt: str) -> dict | None:
@@ -77,7 +87,7 @@ def _call_llm(prompt: str) -> dict | None:
             max_tokens=700,
             messages=[{"role": "user", "content": prompt}],
         )
-        return json.loads(response.content[0].text)
+        return json.loads(_strip_code_fences(response.content[0].text))
     except (json.JSONDecodeError, anthropic.APIError, IndexError, AttributeError):
         return None
 
@@ -148,7 +158,7 @@ def save_clues(supabase, movie: dict, clues_json: dict, character_names: list[st
         confidence = float(entry.get("confidence", 0.0))
         if not clue_text:
             continue
-        active = is_valid_clue(clue_text, confidence, movie["title"], character_names)
+        active = is_valid_clue(clue_text, confidence, movie["title"], character_names, difficulty)
 
         supabase.table("clues").insert({
             "movie_id": movie["id"],

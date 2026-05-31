@@ -74,17 +74,23 @@ def seed_movie(supabase, tmdb_movie: dict) -> str | None:
 
 def seed_movies(target: int = 100):
     from db import get_client
-    from tmdb import get_popular_movies, get_top_rated_movies
+    from tmdb import get_top_rated_movies
 
     supabase = get_client()
     seeded = 0
     page = 1
+    seen_ids: set[int] = set()
 
     while seeded < target:
-        movies = get_popular_movies(page) + get_top_rated_movies(page)
-        for m in movies:
+        batch = get_top_rated_movies(page)
+        if not batch:
+            break
+        for m in batch:
             if seeded >= target:
                 break
+            if m["id"] in seen_ids:
+                continue
+            seen_ids.add(m["id"])
             try:
                 seed_movie(supabase, m)
                 seeded += 1
