@@ -18,7 +18,11 @@ export function GuessInput({ onSubmit, disabled }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">
+      <label htmlFor="guess-input" className="sr-only">
+        Movie title
+      </label>
       <input
+        id="guess-input"
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
