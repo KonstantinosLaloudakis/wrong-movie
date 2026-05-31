@@ -1,20 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDailyPuzzle } from '../hooks/useDailyPuzzle';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
 import { ShareButton } from '../components/ShareButton';
+import { isCorrectGuess } from '../lib/guessMatch';
 
 export function DailyPage() {
   const { puzzle, loading, error, state, savedResult, streak, submitGuess } =
     useDailyPuzzle();
 
   const [shaking, setShaking] = useState(false);
+  const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (shakeTimer.current) clearTimeout(shakeTimer.current);
+    };
+  }, []);
 
   function handleGuess(guess: string) {
+    if (!puzzle) return;
+    const correct = isCorrectGuess(guess, puzzle.normalizedTitle, puzzle.altTitles);
     submitGuess(guess);
-    setShaking(true);
-    setTimeout(() => setShaking(false), 300);
+    if (!correct) {
+      setShaking(true);
+      shakeTimer.current = setTimeout(() => setShaking(false), 300);
+    }
   }
 
   if (loading) {

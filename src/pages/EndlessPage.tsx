@@ -1,23 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useEndlessGame } from '../hooks/useEndlessGame';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
+import { isCorrectGuess } from '../lib/guessMatch';
 
 export function EndlessPage() {
   const { puzzle, loading, sessionScore, state, fetchNext, submitGuess } =
     useEndlessGame();
 
   const [shaking, setShaking] = useState(false);
+  const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     fetchNext();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    return () => {
+      if (shakeTimer.current) clearTimeout(shakeTimer.current);
+    };
+  }, []);
+
   function handleGuess(guess: string) {
+    if (!puzzle) return;
+    const correct = isCorrectGuess(guess, puzzle.normalizedTitle, puzzle.altTitles);
     submitGuess(guess);
-    setShaking(true);
-    setTimeout(() => setShaking(false), 300);
+    if (!correct) {
+      setShaking(true);
+      shakeTimer.current = setTimeout(() => setShaking(false), 300);
+    }
   }
 
   if (loading && !puzzle) {

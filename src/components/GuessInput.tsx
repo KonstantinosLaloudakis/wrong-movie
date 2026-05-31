@@ -3,10 +3,9 @@ import { useState } from 'react';
 interface Props {
   onSubmit: (guess: string) => void;
   disabled?: boolean;
-  loading?: boolean;
 }
 
-export function GuessInput({ onSubmit, disabled, loading }: Props) {
+export function GuessInput({ onSubmit, disabled }: Props) {
   const [value, setValue] = useState('');
 
   function handleSubmit(e: React.FormEvent) {
@@ -36,14 +35,10 @@ export function GuessInput({ onSubmit, disabled, loading }: Props) {
       />
       <button
         type="submit"
-        disabled={disabled || loading || !value.trim()}
+        disabled={disabled || !value.trim()}
         className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
       >
-        {loading ? (
-          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-        ) : (
-          'Guess'
-        )}
+        Guess
       </button>
     </form>
   );
