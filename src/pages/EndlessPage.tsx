@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useEndlessGame } from '../hooks/useEndlessGame';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
@@ -28,6 +28,14 @@ export function EndlessPage() {
 
   const isDone = state.result !== 'unanswered';
 
+  const [shaking, setShaking] = useState(false);
+
+  function handleGuess(guess: string) {
+    submitGuess(guess);
+    setShaking(true);
+    setTimeout(() => setShaking(false), 300);
+  }
+
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
@@ -41,7 +49,11 @@ export function EndlessPage() {
       />
 
       <div className="mt-4 space-y-2">
-        {!isDone && <GuessInput onSubmit={submitGuess} />}
+        {!isDone && (
+          <div className={shaking ? 'shake' : ''}>
+            <GuessInput onSubmit={handleGuess} />
+          </div>
+        )}
 
         {!isDone &&
           state.guesses.map((g, i) => (

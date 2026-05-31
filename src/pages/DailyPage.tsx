@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDailyPuzzle } from '../hooks/useDailyPuzzle';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
@@ -23,6 +24,14 @@ export function DailyPage() {
   const isDone = state.result !== 'unanswered';
   const alreadyPlayedToday = savedResult !== null;
 
+  const [shaking, setShaking] = useState(false);
+
+  function handleGuess(guess: string) {
+    submitGuess(guess);
+    setShaking(true);
+    setTimeout(() => setShaking(false), 300);
+  }
+
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
@@ -39,7 +48,9 @@ export function DailyPage() {
 
       <div className="mt-4 space-y-2">
         {!isDone && !alreadyPlayedToday && (
-          <GuessInput onSubmit={submitGuess} />
+          <div className={shaking ? 'shake' : ''}>
+            <GuessInput onSubmit={handleGuess} />
+          </div>
         )}
 
         {state.guesses.map((g, i) => (

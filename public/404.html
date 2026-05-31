@@ -1,0 +1,9 @@
+<!doctype html>
+<html>
+  <head>
+    <script>
+      const path = window.location.pathname.replace('/wrong-movie', '') || '/';
+      window.location.replace('/wrong-movie/#' + path);
+    </script>
+  </head>
+</html>
