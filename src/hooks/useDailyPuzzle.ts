@@ -41,8 +41,20 @@ export function useDailyPuzzle() {
     fetchDailyPuzzle();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (!puzzle || !savedResult) return;
+    const diffIndex = savedResult.guessCount - 1;
+    setState({
+      revealedDifficulty: DIFFICULTY_ORDER[Math.min(diffIndex, 2)],
+      guesses: [], // guesses are not persisted — see DailyResult type
+      result: savedResult.result,
+    });
+    // eslint-disable-line react-hooks/exhaustive-deps
+  }, [puzzle]); // intentionally excludes savedResult — only restore once when puzzle first loads
+
   async function fetchDailyPuzzle() {
     setLoading(true);
+    setError(null);
     const { data, error: err } = await supabase.rpc('get_daily_puzzle', {
       p_date: todayStr(),
     });
@@ -67,16 +79,6 @@ export function useDailyPuzzle() {
         easy: { id: row.clue_easy_id, text: row.easy_clue, difficulty: 'easy' },
       },
     });
-
-    // Restore state if already played today
-    if (savedResult) {
-      const diffIndex = savedResult.guessCount - 1;
-      setState({
-        revealedDifficulty: DIFFICULTY_ORDER[Math.min(diffIndex, 2)],
-        guesses: [],
-        result: savedResult.result,
-      });
-    }
 
     setLoading(false);
   }
@@ -128,6 +130,7 @@ export function useDailyPuzzle() {
     const yesterdayStr = yesterday.toISOString().slice(0, 10);
 
     setStreak((prev) => {
+      if (prev.lastPlayedDate === todayStr()) return prev; // already updated today
       const consecutive =
         won && prev.lastPlayedDate === yesterdayStr
           ? prev.current + 1
@@ -142,5 +145,5 @@ export function useDailyPuzzle() {
     });
   }
 
-  return { puzzle, loading, error, state, savedResult, streak, submitGuess };
+  return { puzzle, loading, error, state, savedResult, streak, submitGuess, refetch: fetchDailyPuzzle };
 }
