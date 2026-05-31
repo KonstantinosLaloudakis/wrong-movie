@@ -37,9 +37,10 @@ export function isCorrectGuess(
   const normalizedGuess = normalizeTitle(guess);
   if (!normalizedGuess) return false;
 
-  const targets = [normalizedTitle, ...altTitles.map(normalizeTitle)];
-  return targets.some(
-    (target) =>
-      normalizedGuess === target || levenshtein(normalizedGuess, target) <= 2
-  );
+  const targets = [normalizeTitle(normalizedTitle), ...altTitles.map(normalizeTitle)];
+  return targets.some((target) => {
+    if (normalizedGuess === target) return true;
+    const maxDist = Math.min(2, Math.floor(target.length / 3));
+    return maxDist > 0 && levenshtein(normalizedGuess, target) <= maxDist;
+  });
 }
