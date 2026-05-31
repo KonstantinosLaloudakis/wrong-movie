@@ -78,7 +78,7 @@ def _call_llm(prompt: str) -> dict | None:
             messages=[{"role": "user", "content": prompt}],
         )
         return json.loads(response.content[0].text)
-    except (json.JSONDecodeError, anthropic.APIError):
+    except (json.JSONDecodeError, anthropic.APIError, IndexError, AttributeError):
         return None
 
 
@@ -100,7 +100,7 @@ def generate_clues_for_movie(movie: dict, cast_with_roles: list[dict]) -> dict |
     return result
 
 
-def _get_cast_with_roles(supabase, movie_id: str, active_movie_tmdb_ids: set[int]) -> list[dict]:
+def _get_cast_with_roles(supabase, movie_id: str, active_movie_titles: set[str]) -> list[dict]:
     """Return cast members that have a famous role not in our own movie pool."""
     cast_rows = (
         supabase.table("movie_cast")
@@ -126,8 +126,8 @@ def _get_cast_with_roles(supabase, movie_id: str, active_movie_tmdb_ids: set[int
         # Pick first role whose source movie is not in our pool
         best_role = next(
             (r for r in roles if r["source_movie_title"].lower() not in
-             {t.lower() for t in active_movie_tmdb_ids}),
-            roles[0] if roles else None,
+             {t.lower() for t in active_movie_titles}),
+            None,
         )
         if best_role:
             result.append({
@@ -146,6 +146,8 @@ def save_clues(supabase, movie: dict, clues_json: dict, character_names: list[st
         entry = clues_json.get(difficulty, {})
         clue_text = entry.get("clue", "")
         confidence = float(entry.get("confidence", 0.0))
+        if not clue_text:
+            continue
         active = is_valid_clue(clue_text, confidence, movie["title"], character_names)
 
         supabase.table("clues").insert({
@@ -189,17 +191,20 @@ def generate_all_clues():
             print(f"  Skipping (already has clues): {movie['title']}")
             continue
 
-        cast_with_roles = _get_cast_with_roles(supabase, movie["id"], active_titles)
-        clues_json = generate_clues_for_movie(movie, cast_with_roles)
+        try:
+            cast_with_roles = _get_cast_with_roles(supabase, movie["id"], active_titles)
+            clues_json = generate_clues_for_movie(movie, cast_with_roles)
 
-        if clues_json is None:
-            print(f"  Failed to generate clues for: {movie['title']}")
-            continue
+            if clues_json is None:
+                print(f"  Failed to generate clues for: {movie['title']}")
+                continue
 
-        character_names = [c["character_name"] for c in cast_with_roles]
-        save_clues(supabase, movie, clues_json, character_names)
-        print(f"  Generated clues for: {movie['title']}")
-        time.sleep(0.5)  # avoid rate limiting
+            character_names = [c["character_name"] for c in cast_with_roles]
+            save_clues(supabase, movie, clues_json, character_names)
+            print(f"  Generated clues for: {movie['title']}")
+            time.sleep(0.5)
+        except Exception as e:
+            print(f"  Error for {movie['title']}: {e}")
 
     print("Done.")
 
