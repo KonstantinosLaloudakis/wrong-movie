@@ -51,6 +51,9 @@ def schedule_daily_puzzles(days_ahead: int = 60):
 
     random.shuffle(available)
     to_schedule = min(days_ahead, len(available))
+    if to_schedule == 0:
+        print("No eligible movies available; nothing scheduled.")
+        return
     print(f"Scheduling {to_schedule} puzzles starting {start_date}...")
 
     for i in range(to_schedule):
@@ -58,6 +61,7 @@ def schedule_daily_puzzles(days_ahead: int = 60):
         puzzle_date = start_date + timedelta(days=i)
 
         clue_ids = {}
+        skip_movie = False
         for diff in ("hard", "medium", "easy"):
             clue = (
                 supabase.table("clues")
@@ -70,7 +74,13 @@ def schedule_daily_puzzles(days_ahead: int = 60):
                 .execute()
                 .data
             )
+            if not clue:
+                print(f"  Warning: no active {diff} clue for movie {movie_id}, skipping")
+                skip_movie = True
+                break
             clue_ids[diff] = clue[0]["id"]
+        if skip_movie:
+            continue
 
         supabase.table("daily_puzzles").insert({
             "puzzle_date": puzzle_date.isoformat(),
