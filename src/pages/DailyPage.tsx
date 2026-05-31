@@ -9,6 +9,14 @@ export function DailyPage() {
   const { puzzle, loading, error, state, savedResult, streak, submitGuess } =
     useDailyPuzzle();
 
+  const [shaking, setShaking] = useState(false);
+
+  function handleGuess(guess: string) {
+    submitGuess(guess);
+    setShaking(true);
+    setTimeout(() => setShaking(false), 300);
+  }
+
   if (loading) {
     return (
       <div className="p-8 text-center text-gray-500">
@@ -23,14 +31,6 @@ export function DailyPage() {
 
   const isDone = state.result !== 'unanswered';
   const alreadyPlayedToday = savedResult !== null;
-
-  const [shaking, setShaking] = useState(false);
-
-  function handleGuess(guess: string) {
-    submitGuess(guess);
-    setShaking(true);
-    setTimeout(() => setShaking(false), 300);
-  }
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">

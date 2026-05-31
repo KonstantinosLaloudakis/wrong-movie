@@ -8,9 +8,17 @@ export function EndlessPage() {
   const { puzzle, loading, sessionScore, state, fetchNext, submitGuess } =
     useEndlessGame();
 
+  const [shaking, setShaking] = useState(false);
+
   useEffect(() => {
     fetchNext();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleGuess(guess: string) {
+    submitGuess(guess);
+    setShaking(true);
+    setTimeout(() => setShaking(false), 300);
+  }
 
   if (loading && !puzzle) {
     return <div className="p-8 text-center text-gray-500">Loading…</div>;
@@ -27,14 +35,6 @@ export function EndlessPage() {
   if (!puzzle) return null;
 
   const isDone = state.result !== 'unanswered';
-
-  const [shaking, setShaking] = useState(false);
-
-  function handleGuess(guess: string) {
-    submitGuess(guess);
-    setShaking(true);
-    setTimeout(() => setShaking(false), 300);
-  }
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
