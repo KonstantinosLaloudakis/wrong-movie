@@ -1,51 +1,65 @@
 import json
+import re
 import time
 
-MIN_CLUE_CONFIDENCE = {"hard": 0.2, "medium": 0.4, "easy": 0.6}  # matches config.py
+MIN_CLUE_CONFIDENCE = {"hard": 0.2, "medium": 0.4, "easy": 0.6}
+MIN_FAMOUSNESS_SCORE = 0.10  # used by legacy _get_cast_with_roles only
 
-PROMPT_TEMPLATE = """You are writing clues for a movie trivia game called "Wrong Movie".
+PROMPT_TEMPLATE = """You are writing clues for "Wrong Movie" — a trivia game where players identify
+a movie from clues that swap its characters for the actors' famous roles from OTHER movies.
 
-Rules:
-- Describe the movie's plot using actors' FAMOUS ROLES from OTHER movies instead of actual character names
-- Never mention the movie's actual title
-- Never use the movie's actual character names
-- Each clue must be 1-3 sentences
-- A player who knows the actors should be able to figure out the real movie
+Step 1 — Pick famous roles:
+For each actor listed, identify their single most recognizable role that is NOT from this movie.
+Important checks before you choose:
+- Verify the role is from a DIFFERENT film than the one being described
+- Verify you have the right actor for that role (do not assign a role to the wrong person)
+- If an actor's most famous role happens to be in this very movie, use their second-most-famous role
 
-Generate exactly 3 clues at different difficulty levels:
+Step 2 — Write 3 clues using those roles. Every clue must:
+- Replace the actual characters with the famous roles you chose
+- End with a SHORT, specific hook that captures something unique about THIS movie
+  (a date, location, mood, or one-line premise — not a plot summary)
+- Never mention the movie's actual title or its real character names
 
-HARD: Describe the plot abstractly. Do NOT use the famous role names at all.
-Use conceptual descriptions only (e.g. "a caped crusader's nemesis", "a fellowship's reluctant hero").
+Difficulty rules:
 
-MEDIUM: Use indirect references to the famous roles
-(e.g. "a Gotham villain", "a hobbit-like figure").
+EASY — Name 3 famous roles directly + movie hook. Keep it punchy, 1 sentence.
+  Example (for Eternal Sunshine of the Spotless Mind):
+  "Frodo, Mary Jane and The Riddler have a very weird Valentine's Day"
 
-EASY: Directly substitute famous role names for the actual characters
-(e.g. "The Riddler hires Frodo to erase his ex from his memory").
+MEDIUM — Hint at 2 famous roles indirectly using their iconic traits or setting (no character
+names, no source film titles) + movie hook. 1-2 sentences.
+  Example: "A ring-bearer and a web-slinger's ex discover their shared Valentine's Day has been
+  professionally erased from their memories"
+
+HARD — Cryptically describe just 1 famous role without naming it or its source film + movie hook.
+Every word should point to a specific role, not a generic archetype.
+  Good: "a barefoot adventurer burdened by a cursed precious object" (points to Frodo specifically)
+  Bad:  "a reluctant hero" (too generic — could be anyone)
+  Example: "A barefoot adventurer burdened by a cursed precious object wakes up on Valentine's Day
+  with no memory of the woman he loved"
 
 Movie: {title} ({year})
 Plot: {plot}
+
+Forbidden names — these are the actual characters in this movie, never use them as famous role references:
+{character_names}
 
 Cast:
 {cast_lines}
 
 Respond ONLY with valid JSON, no other text:
 {{
-  "hard":   {{ "clue": "...", "confidence": 0.0 }},
+  "easy":   {{ "clue": "...", "confidence": 0.0 }},
   "medium": {{ "clue": "...", "confidence": 0.0 }},
-  "easy":   {{ "clue": "...", "confidence": 0.0 }}
+  "hard":   {{ "clue": "...", "confidence": 0.0 }}
 }}
 
-confidence = how likely a movie-literate player can solve this clue (1.0 = very guessable)."""
+confidence = how likely a knowledgeable moviegoer can identify the film from this clue alone (1.0 = certain)."""
 
 
-def build_cast_lines(cast_with_roles: list[dict]) -> str:
-    lines = [
-        f"- {c['character_name']} is played by {c['actor_name']}, "
-        f"famous for playing {c['role_name']} in {c['source_movie_title']}"
-        for c in cast_with_roles
-    ]
-    return "\n".join(lines)
+def build_cast_lines(cast_actors: list[dict]) -> str:
+    return "\n".join(f"- {c['actor_name']}" for c in cast_actors)
 
 
 def is_valid_clue(
@@ -84,7 +98,7 @@ def _call_llm(prompt: str) -> dict | None:
     try:
         response = client.messages.create(
             model=ANTHROPIC_MODEL,
-            max_tokens=700,
+            max_tokens=1000,
             messages=[{"role": "user", "content": prompt}],
         )
         return json.loads(_strip_code_fences(response.content[0].text))
@@ -92,15 +106,17 @@ def _call_llm(prompt: str) -> dict | None:
         return None
 
 
-def generate_clues_for_movie(movie: dict, cast_with_roles: list[dict]) -> dict | None:
-    if not cast_with_roles:
+def generate_clues_for_movie(movie: dict, cast_actors: list[dict]) -> dict | None:
+    if len(cast_actors) < 2:
         return None
 
+    character_names = ", ".join(c["character_name"] for c in cast_actors if c["character_name"])
     prompt = PROMPT_TEMPLATE.format(
         title=movie["title"],
         year=movie["release_year"],
         plot=movie.get("plot_summary") or "No plot available.",
-        cast_lines=build_cast_lines(cast_with_roles),
+        character_names=character_names,
+        cast_lines=build_cast_lines(cast_actors),
     )
 
     result = _call_llm(prompt)
@@ -110,8 +126,25 @@ def generate_clues_for_movie(movie: dict, cast_with_roles: list[dict]) -> dict |
     return result
 
 
+def _get_cast_actors(supabase, movie_id: str) -> list[dict]:
+    """Return top cast members (actor name + character name for validation)."""
+    cast_rows = (
+        supabase.table("movie_cast")
+        .select("character_name, actors(name)")
+        .eq("movie_id", movie_id)
+        .order("cast_order")
+        .limit(6)
+        .execute()
+        .data
+    )
+    return [
+        {"actor_name": row["actors"]["name"], "character_name": row["character_name"]}
+        for row in cast_rows
+    ]
+
+
 def _get_cast_with_roles(supabase, movie_id: str, active_movie_titles: set[str]) -> list[dict]:
-    """Return cast members that have a famous role not in our own movie pool."""
+    """Legacy: return cast members with pre-seeded famous roles (used by debug scripts)."""
     cast_rows = (
         supabase.table("movie_cast")
         .select("character_name, actors(id, name, tmdb_id)")
@@ -121,10 +154,12 @@ def _get_cast_with_roles(supabase, movie_id: str, active_movie_titles: set[str])
         .data
     )
 
+    excluded_titles = {t.lower() for t in active_movie_titles}
+    used_source_movies: set[str] = set()
     result = []
+
     for row in cast_rows:
         actor = row["actors"]
-        # Get the actor's best famous role that is NOT from a movie in our pool
         roles = (
             supabase.table("famous_roles")
             .select("role_name, source_movie_title, source_movie_year, famousness_score")
@@ -133,13 +168,17 @@ def _get_cast_with_roles(supabase, movie_id: str, active_movie_titles: set[str])
             .execute()
             .data
         )
-        # Pick first role whose source movie is not in our pool
         best_role = next(
-            (r for r in roles if r["source_movie_title"].lower() not in
-             {t.lower() for t in active_movie_titles}),
+            (
+                r for r in roles
+                if r["source_movie_title"].lower() not in excluded_titles
+                and r["source_movie_title"].lower() not in used_source_movies
+                and r["famousness_score"] >= MIN_FAMOUSNESS_SCORE
+            ),
             None,
         )
         if best_role:
+            used_source_movies.add(best_role["source_movie_title"].lower())
             result.append({
                 "character_name": row["character_name"],
                 "actor_name": actor["name"],
@@ -152,7 +191,19 @@ def _get_cast_with_roles(supabase, movie_id: str, active_movie_titles: set[str])
 def save_clues(supabase, movie: dict, clues_json: dict, character_names: list[str]):
     from config import ANTHROPIC_MODEL
 
+    already_active = {
+        r["difficulty"]
+        for r in supabase.table("clues")
+            .select("difficulty")
+            .eq("movie_id", movie["id"])
+            .eq("is_active", True)
+            .execute()
+            .data
+    }
+
     for difficulty in ("hard", "medium", "easy"):
+        if difficulty in already_active:
+            continue
         entry = clues_json.get(difficulty, {})
         clue_text = entry.get("clue", "")
         confidence = float(entry.get("confidence", 0.0))
@@ -170,7 +221,7 @@ def save_clues(supabase, movie: dict, clues_json: dict, character_names: list[st
         }).execute()
 
 
-def generate_all_clues():
+def generate_all_clues(force: bool = False):
     from db import get_client
 
     supabase = get_client()
@@ -183,11 +234,7 @@ def generate_all_clues():
         .data
     )
 
-    # Build set of all movie titles in our pool to detect famous-role conflicts
-    active_titles = {m["title"] for m in movies}
-
     for movie in movies:
-        # Skip if already has active clues for all 3 difficulties
         existing = (
             supabase.table("clues")
             .select("difficulty")
@@ -197,27 +244,37 @@ def generate_all_clues():
             .data
         )
         existing_diffs = {r["difficulty"] for r in existing}
-        if {"hard", "medium", "easy"} == existing_diffs:
+
+        if not force and {"hard", "medium", "easy"} == existing_diffs:
             print(f"  Skipping (already has clues): {movie['title']}")
             continue
 
         try:
-            cast_with_roles = _get_cast_with_roles(supabase, movie["id"], active_titles)
-            clues_json = generate_clues_for_movie(movie, cast_with_roles)
+            cast_actors = _get_cast_actors(supabase, movie["id"])
 
-            if clues_json is None:
-                print(f"  Failed to generate clues for: {movie['title']}")
+            if len(cast_actors) < 2:
+                print(f"  SKIP (insufficient cast data): {movie['title']}")
                 continue
 
-            character_names = [c["character_name"] for c in cast_with_roles]
+            clues_json = generate_clues_for_movie(movie, cast_actors)
+
+            if clues_json is None:
+                print(f"  SKIP (LLM returned no valid JSON): {movie['title']}")
+                continue
+
+            if force and existing_diffs:
+                supabase.table("clues").update({"is_active": False}).eq("movie_id", movie["id"]).execute()
+
+            character_names = [c["character_name"] for c in cast_actors]
             save_clues(supabase, movie, clues_json, character_names)
-            print(f"  Generated clues for: {movie['title']}")
+            print(f"  OK: {movie['title']}")
             time.sleep(0.5)
         except Exception as e:
-            print(f"  Error for {movie['title']}: {e}")
+            print(f"  ERROR for {movie['title']}: {e}")
 
     print("Done.")
 
 
 if __name__ == "__main__":
-    generate_all_clues()
+    import sys
+    generate_all_clues(force="--force" in sys.argv)

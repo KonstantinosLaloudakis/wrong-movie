@@ -91,6 +91,9 @@ def seed_movies(target: int = 100):
             if m["id"] in seen_ids:
                 continue
             seen_ids.add(m["id"])
+            if m.get("original_language") != "en":
+                print(f"  Skipping non-English ({m.get('original_language')}): {m.get('title')}")
+                continue
             try:
                 seed_movie(supabase, m)
                 seeded += 1
@@ -100,9 +103,42 @@ def seed_movies(target: int = 100):
         page += 1
 
 
+def deactivate_non_english_movies():
+    """Mark any active movies with a non-English original_language as inactive."""
+    from db import get_client
+    from tmdb import get_movie_details
+
+    supabase = get_client()
+    movies = (
+        supabase.table("movies")
+        .select("id, title, tmdb_id")
+        .eq("is_active", True)
+        .execute()
+        .data
+    )
+    print(f"Checking {len(movies)} active movies for language...")
+    deactivated = 0
+    for m in movies:
+        try:
+            details = get_movie_details(m["tmdb_id"])
+            lang = details.get("original_language", "en")
+            if lang != "en":
+                supabase.table("movies").update({"is_active": False}).eq("id", m["id"]).execute()
+                print(f"  Deactivated ({lang}): {m['title']}")
+                deactivated += 1
+            time.sleep(0.1)
+        except Exception as e:
+            print(f"  Error checking {m['title']}: {e}")
+    print(f"Deactivated {deactivated} non-English movies.")
+
+
 if __name__ == "__main__":
     import sys
-    target = int(sys.argv[1]) if len(sys.argv) > 1 else 100
-    print(f"Seeding {target} movies...")
-    seed_movies(target)
+    args = sys.argv[1:]
+    if args and args[0] == "--deactivate-non-english":
+        deactivate_non_english_movies()
+    else:
+        target = int(args[0]) if args else 100
+        print(f"Seeding {target} movies...")
+        seed_movies(target)
     print("Done.")
