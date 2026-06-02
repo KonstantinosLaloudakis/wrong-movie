@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDailyPuzzle } from '../hooks/useDailyPuzzle';
 import { getMovieSuggestions } from '../hooks/useMovieSuggestions';
 import { ClueDisplay } from '../components/ClueDisplay';
@@ -18,7 +18,10 @@ export function DailyPage({ onShowStats }: Props) {
   const [shaking, setShaking] = useState(false);
   const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const suggestions = getMovieSuggestions(movieTitles, inputValue);
+  const suggestions = useMemo(
+    () => getMovieSuggestions(movieTitles, inputValue),
+    [movieTitles, inputValue]
+  );
 
   useEffect(() => {
     return () => {
