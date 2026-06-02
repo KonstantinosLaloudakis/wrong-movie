@@ -68,7 +68,7 @@ export function ResultOverlay({
         <img
           src={posterUrl}
           alt={movieTitle}
-          className="mx-auto mt-3 h-44 w-auto rounded object-cover shadow"
+          className="mx-auto mt-3 h-72 w-auto rounded object-cover shadow"
         />
       )}
 
