@@ -44,13 +44,13 @@ export function EndlessPage() {
   }
 
   if (loading && !puzzle) {
-    return <div className="p-8 text-center text-gray-500">Loading…</div>;
+    return <div className="p-8 text-center text-slate-500">Loading…</div>;
   }
 
   if (!loading && !puzzle) {
     return (
       <div className="p-8 text-center">
-        <p className="text-gray-500">No more movies available — impressive!</p>
+        <p className="text-slate-500">No more movies available — impressive!</p>
       </div>
     );
   }
@@ -61,8 +61,8 @@ export function EndlessPage() {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
-        <span className="font-medium text-gray-700">Endless Mode</span>
+      <div className="mb-4 flex items-center justify-between text-sm text-slate-500">
+        <span className="font-medium text-slate-700">Endless Mode</span>
         <span>Score: {sessionScore}</span>
       </div>
 

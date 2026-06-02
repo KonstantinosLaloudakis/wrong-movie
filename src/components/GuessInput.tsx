@@ -118,7 +118,7 @@ export function GuessInput({
         <ul
           id="suggestions-list"
           role="listbox"
-          className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden"
+          className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden"
         >
           {suggestions.map((title, i) => (
             <li

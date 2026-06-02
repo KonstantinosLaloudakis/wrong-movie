@@ -46,7 +46,7 @@ export function ShareButton({ puzzleNumber, result, revealedDifficulty }: Props)
   return (
     <button
       onClick={handleShare}
-      className="mt-2 w-full rounded-lg border border-gray-200 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+      className="mt-2 w-full rounded-lg border border-slate-200 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
     >
       {copied ? '✓ Copied to clipboard!' : '📋 Share result'}
     </button>

@@ -45,7 +45,7 @@ export function DailyPage({ onShowStats }: Props) {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-gray-500">
+      <div className="p-8 text-center text-slate-500">
         Loading today's puzzle…
       </div>
     );
@@ -117,13 +117,13 @@ export function DailyPage({ onShowStats }: Props) {
         )}
 
         {alreadyPlayedToday && !isDone && (
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-slate-500">
             You've already played today. Come back tomorrow!
           </p>
         )}
       </div>
 
-      <footer className="mt-10 text-center text-xs text-gray-400">
+      <footer className="mt-10 text-center text-xs text-slate-400">
         This product uses the TMDb API but is not endorsed or certified by TMDb.
       </footer>
     </div>
