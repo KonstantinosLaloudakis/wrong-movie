@@ -4,16 +4,10 @@ import type { Difficulty, GuessResult } from '../types';
 
 const POINTS_MAP: Record<Difficulty, number> = { hard: 3, medium: 2, easy: 1 };
 
-const BADGE_CONFIG: Record<Difficulty, { label: string; bg: string }> = {
-  hard:   { label: '🔴 Hard',   bg: 'bg-red-600' },
-  medium: { label: '🟡 Medium', bg: 'bg-amber-500' },
-  easy:   { label: '🟢 Easy',   bg: 'bg-green-600' },
-};
-
-const OVERLAY_BG: Record<Difficulty, string> = {
-  hard:   'bg-red-50',
-  medium: 'bg-amber-50',
-  easy:   'bg-green-50',
+const BADGE_CONFIG: Record<Difficulty, { label: string; classes: string }> = {
+  hard:   { label: 'Hard',   classes: 'bg-red-50 text-red-700' },
+  medium: { label: 'Medium', classes: 'bg-amber-50 text-amber-700' },
+  easy:   { label: 'Easy',   classes: 'bg-green-50 text-green-700' },
 };
 
 interface Props {
@@ -50,21 +44,25 @@ export function ResultOverlay({
 
   const points = POINTS_MAP[difficulty];
   const badge = BADGE_CONFIG[difficulty];
-  const overlayBg = result === 'correct' ? OVERLAY_BG[difficulty] : 'bg-white';
 
   return (
-    <div className={`mt-4 rounded-lg border border-gray-200 p-5 text-center shadow-sm ${overlayBg}`}>
+    <div className="mt-4 rounded-xl border border-slate-200 bg-white p-5 text-center shadow-sm">
       {result === 'correct' ? (
-        <div
-          className={`badge-pop mx-auto mb-2 inline-block rounded-full px-4 py-1.5 text-sm font-bold text-white ${badge.bg}`}
-        >
-          {badge.label} · +{points} pt{points !== 1 ? 's' : ''}
+        <div className="mb-3 flex items-center justify-center gap-2">
+          <span
+            className={`badge-pop inline-flex items-center rounded-full px-3 py-1 text-sm font-bold ${badge.classes}`}
+          >
+            {badge.label}
+          </span>
+          <span className="text-sm font-semibold text-slate-500">
+            +{points} pt{points !== 1 ? 's' : ''}
+          </span>
         </div>
       ) : (
-        <p className="text-lg font-bold text-red-500">Not quite — the answer was:</p>
+        <p className="mb-1 text-lg font-bold text-red-500">Not quite — the answer was:</p>
       )}
 
-      <p className="mt-1 text-xl font-semibold text-gray-900">{movieTitle}</p>
+      <p className="text-xl font-semibold text-slate-900">{movieTitle}</p>
 
       {posterUrl && (
         <img
@@ -79,7 +77,7 @@ export function ResultOverlay({
           <button
             type="button"
             onClick={onNext}
-            className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            className="rounded-lg bg-slate-900 px-6 py-2 text-sm font-medium text-white hover:bg-slate-700"
           >
             Next Movie →
           </button>
@@ -89,7 +87,7 @@ export function ResultOverlay({
             type="button"
             aria-label="stats"
             onClick={onShowStats}
-            className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             📊 Stats
           </button>

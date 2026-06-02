@@ -16,7 +16,7 @@ describe('ResultOverlay', () => {
     render(
       <ResultOverlay result="correct" movieTitle="Inception" posterUrl={null} difficulty="hard" />
     );
-    expect(screen.getByText(/🔴 Hard/)).toBeInTheDocument();
+    expect(screen.getByText(/Hard/)).toBeInTheDocument();
     expect(screen.getByText(/\+3 pts/)).toBeInTheDocument();
   });
 
@@ -24,7 +24,7 @@ describe('ResultOverlay', () => {
     render(
       <ResultOverlay result="correct" movieTitle="Inception" posterUrl={null} difficulty="medium" />
     );
-    expect(screen.getByText(/🟡 Medium/)).toBeInTheDocument();
+    expect(screen.getByText(/Medium/)).toBeInTheDocument();
     expect(screen.getByText(/\+2 pts/)).toBeInTheDocument();
   });
 
@@ -32,7 +32,7 @@ describe('ResultOverlay', () => {
     render(
       <ResultOverlay result="correct" movieTitle="Inception" posterUrl={null} difficulty="easy" />
     );
-    expect(screen.getByText(/🟢 Easy/)).toBeInTheDocument();
+    expect(screen.getByText(/Easy/)).toBeInTheDocument();
     expect(screen.getByText(/\+1 pt/)).toBeInTheDocument();
   });
 
