@@ -10,3 +10,20 @@
   80%       { transform: translateX(4px); }
 }
 .shake { animation: shake 0.3s ease-in-out; }
+
+@keyframes clueSlideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.clue-entering {
+  animation: clueSlideDown 0.35s ease-out both;
+}
+
+@keyframes badgePop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-pop {
+  animation: badgePop 0.3s ease-out both;
+}
