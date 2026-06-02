@@ -41,3 +41,26 @@ export interface StreakData {
   best: number;
   lastPlayedDate: string | null;
 }
+
+export type GameResultType = 'hard' | 'medium' | 'easy' | 'miss';
+
+export interface GameHistoryEntry {
+  date: string;          // "YYYY-MM-DD"
+  result: GameResultType;
+  puzzleNumber: number;
+}
+
+export type GameHistory = GameHistoryEntry[];
+
+export interface Stats {
+  played: number;
+  winRate: number;       // 0–100, rounded
+  currentStreak: number;
+  bestStreak: number;
+  distribution: {
+    hard: number;
+    medium: number;
+    easy: number;
+    miss: number;
+  };
+}
