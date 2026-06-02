@@ -132,11 +132,54 @@ def deactivate_non_english_movies():
     print(f"Deactivated {deactivated} non-English movies.")
 
 
+def seed_movies_by_decades(decades: list[tuple[int, int]], per_decade: int = 100):
+    """Seed the most popular English-language movies from each decade range."""
+    from db import get_client
+    from tmdb import get_popular_movies_by_era
+
+    supabase = get_client()
+    total = 0
+
+    for year_from, year_to in decades:
+        print(f"\n--- {year_from}s ({year_from}–{year_to}) ---")
+        seeded = 0
+        page = 1
+        seen_ids: set[int] = set()
+
+        while seeded < per_decade:
+            batch = get_popular_movies_by_era(year_from, year_to, page)
+            if not batch:
+                break
+            for m in batch:
+                if seeded >= per_decade:
+                    break
+                if m["id"] in seen_ids:
+                    continue
+                seen_ids.add(m["id"])
+                try:
+                    seed_movie(supabase, m)
+                    seeded += 1
+                    time.sleep(0.1)
+                except Exception as e:
+                    print(f"  Error seeding {m.get('title')}: {e}")
+            page += 1
+
+        total += seeded
+        print(f"  Done ({seeded} processed)")
+
+    print(f"\nTotal processed: {total}")
+
+
 if __name__ == "__main__":
     import sys
     args = sys.argv[1:]
     if args and args[0] == "--deactivate-non-english":
         deactivate_non_english_movies()
+    elif args and args[0] == "--decades":
+        decades = [(1980, 1989), (1990, 1999), (2000, 2009)]
+        per_decade = int(args[1]) if len(args) > 1 else 100
+        print(f"Seeding top {per_decade} popular movies per decade from 80s, 90s, 00s...")
+        seed_movies_by_decades(decades, per_decade)
     else:
         target = int(args[0]) if args else 100
         print(f"Seeding {target} movies...")
