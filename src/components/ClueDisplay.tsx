@@ -23,15 +23,16 @@ const ORDER: Difficulty[] = ['hard', 'medium', 'easy'];
 interface Props {
   clues: { hard: Clue; medium: Clue; easy: Clue };
   revealedDifficulty: Difficulty;
+  showAll?: boolean;
 }
 
-export function ClueDisplay({ clues, revealedDifficulty }: Props) {
+export function ClueDisplay({ clues, revealedDifficulty, showAll = false }: Props) {
   const revealedIndex = ORDER.indexOf(revealedDifficulty);
 
   return (
     <div className="space-y-3">
       {ORDER.map((diff, i) => {
-        const shown = i <= revealedIndex;
+        const shown = showAll || i <= revealedIndex;
         return (
           <div
             key={`${diff}-${shown}`}

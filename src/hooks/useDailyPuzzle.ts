@@ -28,6 +28,7 @@ export function useDailyPuzzle() {
     revealedDifficulty: 'hard',
     guesses: [],
     result: 'unanswered',
+    showAllClues: false,
   });
 
   const [savedResult, setSavedResult] = useLocalStorage<DailyResult | null>(
@@ -55,6 +56,7 @@ export function useDailyPuzzle() {
       revealedDifficulty: DIFFICULTY_ORDER[Math.min(diffIndex, 2)],
       guesses: [], // guesses are not persisted — see DailyResult type
       result: savedResult.result,
+      showAllClues: savedResult.result === 'correct',
     });
     // eslint-disable-line react-hooks/exhaustive-deps
   }, [puzzle]); // intentionally excludes savedResult — only restore once when puzzle first loads
@@ -129,13 +131,14 @@ export function useDailyPuzzle() {
       });
       updateStreak(true);
       appendHistory(state.revealedDifficulty, puzzle.puzzleNumber);
-      setState({ ...state, guesses: newGuesses, result: 'correct' });
+      setState({ ...state, guesses: newGuesses, result: 'correct', showAllClues: true });
       return true;
     } else if (currentIndex < DIFFICULTY_ORDER.length - 1) {
       setState({
         guesses: newGuesses,
         revealedDifficulty: DIFFICULTY_ORDER[currentIndex + 1],
         result: 'unanswered',
+        showAllClues: false,
       });
       return false;
     } else {

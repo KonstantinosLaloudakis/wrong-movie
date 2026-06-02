@@ -72,6 +72,7 @@ export function DailyPage({ onShowStats }: Props) {
       <ClueDisplay
         clues={puzzle.clues}
         revealedDifficulty={state.revealedDifficulty}
+        showAll={state.showAllClues}
       />
 
       <div className="mt-4 space-y-2">

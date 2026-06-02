@@ -15,6 +15,7 @@ export function useEndlessGame() {
     revealedDifficulty: 'hard',
     guesses: [],
     result: 'unanswered',
+    showAllClues: false,
   });
   const [movieTitles, setMovieTitles] = useState<string[]>([]);
 
@@ -27,7 +28,7 @@ export function useEndlessGame() {
   const fetchNext = useCallback(async () => {
     setLoading(true);
     setPuzzle(null);
-    setState({ revealedDifficulty: 'hard', guesses: [], result: 'unanswered' });
+    setState({ revealedDifficulty: 'hard', guesses: [], result: 'unanswered', showAllClues: false });
 
     const { data, error } = await supabase.rpc('get_random_movie', {
       excluded_ids: playedIds,
@@ -71,13 +72,14 @@ export function useEndlessGame() {
 
     if (correct) {
       setSessionScore((s) => s + POINTS_MAP[state.revealedDifficulty]);
-      setState({ ...state, guesses: newGuesses, result: 'correct' });
+      setState({ ...state, guesses: newGuesses, result: 'correct', showAllClues: true });
       return true;
     } else if (currentIndex < DIFFICULTY_ORDER.length - 1) {
       setState({
         guesses: newGuesses,
         revealedDifficulty: DIFFICULTY_ORDER[currentIndex + 1],
         result: 'unanswered',
+        showAllClues: false,
       });
       return false;
     } else {

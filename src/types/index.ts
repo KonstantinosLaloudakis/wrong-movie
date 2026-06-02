@@ -26,6 +26,7 @@ export interface RoundState {
   revealedDifficulty: Difficulty;
   guesses: string[];
   result: GuessResult;
+  showAllClues: boolean;
 }
 
 export interface DailyResult {
