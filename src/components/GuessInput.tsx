@@ -15,7 +15,7 @@ function highlightMatch(title: string, query: string) {
   return (
     <>
       {title.slice(0, idx)}
-      <span className="bg-indigo-100 text-indigo-700 font-semibold rounded px-0.5">
+      <span className="bg-slate-200 text-slate-900 font-semibold rounded px-0.5">
         {title.slice(idx, idx + query.length)}
       </span>
       {title.slice(idx + query.length)}
