@@ -53,6 +53,19 @@ export interface GameHistoryEntry {
 
 export type GameHistory = GameHistoryEntry[];
 
+export interface EndlessHistoryEntry {
+  result: GameResultType;
+  playedAt: string;         // ISO timestamp
+}
+
+export type EndlessHistory = EndlessHistoryEntry[];
+
+export interface EndlessStats {
+  played: number;
+  winRate: number;          // 0–100, rounded
+  distribution: { hard: number; medium: number; easy: number; miss: number };
+}
+
 export interface Stats {
   played: number;
   winRate: number;       // 0–100, rounded
