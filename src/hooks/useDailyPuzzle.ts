@@ -151,7 +151,7 @@ export function useDailyPuzzle() {
       });
       updateStreak(false);
       appendHistory('miss', puzzle.puzzleNumber);
-      setState({ ...state, guesses: newGuesses, result: 'wrong' });
+      setState({ ...state, guesses: newGuesses, result: 'wrong', showAllClues: false });
       return false;
     }
   }

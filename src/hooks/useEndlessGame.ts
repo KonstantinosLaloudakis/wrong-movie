@@ -83,7 +83,7 @@ export function useEndlessGame() {
       });
       return false;
     } else {
-      setState({ ...state, guesses: newGuesses, result: 'wrong' });
+      setState({ ...state, guesses: newGuesses, result: 'wrong', showAllClues: false });
       return false;
     }
   }
