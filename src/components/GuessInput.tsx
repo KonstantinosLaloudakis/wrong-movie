@@ -96,7 +96,7 @@ export function GuessInput({
           onKeyDown={handleKeyDown}
           disabled={disabled}
           placeholder="Type the movie title…"
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100"
+          className="flex-1 rounded-lg border-2 border-slate-200 px-4 py-2 text-sm outline-none transition-colors focus:border-slate-900 disabled:bg-slate-100"
           autoComplete="off"
           autoCapitalize="off"
           spellCheck={false}
@@ -108,7 +108,7 @@ export function GuessInput({
         <button
           type="submit"
           disabled={disabled || !value.trim()}
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
         >
           Guess
         </button>
@@ -136,8 +136,8 @@ export function GuessInput({
               }}
               className={`px-4 py-2 text-sm cursor-pointer ${
                 i === activeIndex
-                  ? 'bg-indigo-50 text-indigo-900'
-                  : 'text-gray-800 hover:bg-gray-50'
+                  ? 'bg-slate-100 text-slate-900'
+                  : 'text-slate-700 hover:bg-slate-50'
               }`}
             >
               {highlightMatch(title, value)}
