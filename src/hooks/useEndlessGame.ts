@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { isCorrectGuess } from '../lib/guessMatch';
 import type { Puzzle, RoundState, Difficulty } from '../types';
@@ -16,6 +16,13 @@ export function useEndlessGame() {
     guesses: [],
     result: 'unanswered',
   });
+  const [movieTitles, setMovieTitles] = useState<string[]>([]);
+
+  useEffect(() => {
+    supabase.rpc('get_movie_titles').then(({ data }) => {
+      if (data) setMovieTitles((data as { title: string }[]).map((r) => r.title));
+    });
+  }, []);
 
   const fetchNext = useCallback(async () => {
     setLoading(true);
@@ -79,5 +86,5 @@ export function useEndlessGame() {
     }
   }
 
-  return { puzzle, loading, sessionScore, state, fetchNext, submitGuess };
+  return { puzzle, loading, sessionScore, state, fetchNext, submitGuess, movieTitles };
 }

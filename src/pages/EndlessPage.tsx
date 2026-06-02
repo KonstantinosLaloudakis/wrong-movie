@@ -1,16 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useEndlessGame } from '../hooks/useEndlessGame';
+import { getMovieSuggestions } from '../hooks/useMovieSuggestions';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
 
 export function EndlessPage() {
-  const { puzzle, loading, sessionScore, state, fetchNext, submitGuess } =
+  const { puzzle, loading, sessionScore, state, fetchNext, submitGuess, movieTitles } =
     useEndlessGame();
 
   const [inputValue, setInputValue] = useState('');
   const [shaking, setShaking] = useState(false);
   const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const suggestions = useMemo(
+    () => getMovieSuggestions(movieTitles, inputValue),
+    [movieTitles, inputValue]
+  );
 
   useEffect(() => {
     fetchNext();
@@ -24,6 +30,7 @@ export function EndlessPage() {
 
   function handleGuess(guess: string) {
     const correct = submitGuess(guess);
+    setInputValue('');
     if (!correct) {
       if (shakeTimer.current) clearTimeout(shakeTimer.current);
       setShaking(true);
@@ -70,10 +77,9 @@ export function EndlessPage() {
             <GuessInput
               value={inputValue}
               onChange={setInputValue}
-              onSubmit={(guess) => {
-                handleGuess(guess);
-                setInputValue('');
-              }}
+              onSubmit={handleGuess}
+              suggestions={suggestions}
+              onSuggestionSelect={setInputValue}
             />
           </div>
         )}
