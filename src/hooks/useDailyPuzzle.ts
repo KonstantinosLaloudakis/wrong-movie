@@ -23,6 +23,7 @@ export function useDailyPuzzle() {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [movieTitles, setMovieTitles] = useState<string[]>([]);
   const [state, setState] = useState<RoundState>({
     revealedDifficulty: 'hard',
     guesses: [],
@@ -61,9 +62,19 @@ export function useDailyPuzzle() {
   async function fetchDailyPuzzle() {
     setLoading(true);
     setError(null);
-    const { data, error: err } = await supabase.rpc('get_daily_puzzle', {
-      p_date: todayStr(),
-    });
+
+    const [titlesResult, puzzleResult] = await Promise.all([
+      supabase.rpc('get_movie_titles'),
+      supabase.rpc('get_daily_puzzle', { p_date: todayStr() }),
+    ]);
+
+    if (titlesResult.data) {
+      setMovieTitles(
+        (titlesResult.data as { title: string }[]).map((r) => r.title)
+      );
+    }
+
+    const { data, error: err } = puzzleResult;
 
     if (err || !data?.length) {
       setError('No puzzle available for today. Check back tomorrow!');
@@ -163,5 +174,5 @@ export function useDailyPuzzle() {
     });
   }
 
-  return { puzzle, loading, error, state, savedResult, streak, submitGuess, refetch: fetchDailyPuzzle };
+  return { puzzle, loading, error, state, savedResult, streak, submitGuess, refetch: fetchDailyPuzzle, movieTitles };
 }
