@@ -21,9 +21,9 @@ function DistributionBar({ label, count, total, color }: BarProps) {
       <div className="relative h-5 flex-1 overflow-hidden rounded bg-slate-100">
         <div
           className="flex h-full items-center justify-end rounded pr-2 transition-all duration-500"
-          style={{ width: `${Math.max(pct, 4)}%`, backgroundColor: color }}
+          style={{ width: `${count > 0 ? Math.max(pct, 4) : 0}%`, backgroundColor: color }}
         >
-          <span className="text-xs font-semibold text-white">{count}</span>
+          {count > 0 && <span className="text-xs font-semibold text-white">{count}</span>}
         </div>
       </div>
     </div>
