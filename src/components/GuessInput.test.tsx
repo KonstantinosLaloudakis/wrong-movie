@@ -33,13 +33,13 @@ describe('GuessInput', () => {
     renderInput({ value: 'da', suggestions: SUGGESTIONS });
     expect(screen.getByRole('listbox')).toBeInTheDocument();
     expect(screen.getAllByRole('option')).toHaveLength(3);
-    expect(screen.getByText('The Dark Knight')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'The Dark Knight' })).toBeInTheDocument();
   });
 
   it('calls onSuggestionSelect when a suggestion is clicked', () => {
     const onSuggestionSelect = vi.fn();
     renderInput({ value: 'da', suggestions: SUGGESTIONS, onSuggestionSelect });
-    fireEvent.click(screen.getByText('The Dark Knight'));
+    fireEvent.click(screen.getByRole('option', { name: 'The Dark Knight' }));
     expect(onSuggestionSelect).toHaveBeenCalledWith('The Dark Knight');
   });
 

@@ -124,6 +124,7 @@ export function GuessInput({
               key={title}
               id={`suggestion-${i}`}
               role="option"
+              aria-label={title}
               aria-selected={i === activeIndex}
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -138,7 +139,7 @@ export function GuessInput({
                   : 'text-gray-800 hover:bg-gray-50'
               }`}
             >
-              {title}
+              {highlightMatch(title, value)}
             </li>
           ))}
         </ul>
