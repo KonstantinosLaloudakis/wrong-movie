@@ -8,6 +8,7 @@ export function EndlessPage() {
   const { puzzle, loading, sessionScore, state, fetchNext, submitGuess } =
     useEndlessGame();
 
+  const [inputValue, setInputValue] = useState('');
   const [shaking, setShaking] = useState(false);
   const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -61,7 +62,14 @@ export function EndlessPage() {
       <div className="mt-4 space-y-2">
         {!isDone && (
           <div className={shaking ? 'shake' : ''}>
-            <GuessInput onSubmit={handleGuess} />
+            <GuessInput
+              value={inputValue}
+              onChange={setInputValue}
+              onSubmit={(guess) => {
+                handleGuess(guess);
+                setInputValue('');
+              }}
+            />
           </div>
         )}
 

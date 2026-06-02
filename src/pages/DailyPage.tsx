@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDailyPuzzle } from '../hooks/useDailyPuzzle';
+import { getMovieSuggestions } from '../hooks/useMovieSuggestions';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
@@ -10,11 +11,14 @@ interface Props {
 }
 
 export function DailyPage({ onShowStats }: Props) {
-  const { puzzle, loading, error, state, savedResult, streak, submitGuess } =
+  const { puzzle, loading, error, state, savedResult, streak, submitGuess, movieTitles } =
     useDailyPuzzle();
 
+  const [inputValue, setInputValue] = useState('');
   const [shaking, setShaking] = useState(false);
   const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const suggestions = getMovieSuggestions(movieTitles, inputValue);
 
   useEffect(() => {
     return () => {
@@ -24,11 +28,16 @@ export function DailyPage({ onShowStats }: Props) {
 
   function handleGuess(guess: string) {
     const correct = submitGuess(guess);
+    setInputValue('');
     if (!correct) {
       if (shakeTimer.current) clearTimeout(shakeTimer.current);
       setShaking(true);
       shakeTimer.current = setTimeout(() => setShaking(false), 300);
     }
+  }
+
+  function handleSuggestionSelect(title: string) {
+    setInputValue(title);
   }
 
   if (loading) {
@@ -63,7 +72,13 @@ export function DailyPage({ onShowStats }: Props) {
       <div className="mt-4 space-y-2">
         {!isDone && !alreadyPlayedToday && (
           <div className={shaking ? 'shake' : ''}>
-            <GuessInput onSubmit={handleGuess} />
+            <GuessInput
+              value={inputValue}
+              onChange={setInputValue}
+              onSubmit={handleGuess}
+              suggestions={suggestions}
+              onSuggestionSelect={handleSuggestionSelect}
+            />
           </div>
         )}
 
