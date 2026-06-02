@@ -17,8 +17,8 @@ function DistributionBar({ label, count, total, color }: BarProps) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
     <div className="flex items-center gap-2">
-      <span className="w-16 text-xs text-gray-500">{label}</span>
-      <div className="relative h-5 flex-1 overflow-hidden rounded bg-gray-100">
+      <span className="w-16 text-xs text-slate-500">{label}</span>
+      <div className="relative h-5 flex-1 overflow-hidden rounded bg-slate-100">
         <div
           className="flex h-full items-center justify-end rounded pr-2 transition-all duration-500"
           style={{ width: `${Math.max(pct, 4)}%`, backgroundColor: color }}
@@ -42,22 +42,21 @@ export function StatsModal({ isOpen, onClose, stats }: Props) {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           aria-label="close"
           onClick={onClose}
-          className="absolute right-4 top-4 text-lg text-gray-400 hover:text-gray-700"
+          className="absolute right-4 top-4 text-lg text-slate-400 hover:text-slate-700"
         >
           ×
         </button>
 
-        <h2 className="mb-5 text-center text-base font-bold uppercase tracking-widest text-gray-700">
+        <h2 className="mb-5 text-center text-base font-bold uppercase tracking-widest text-slate-700">
           Statistics
         </h2>
 
-        {/* Summary numbers */}
         <div className="mb-6 grid grid-cols-4 gap-2 text-center">
           {[
             { value: played, label: 'Played' },
@@ -66,21 +65,20 @@ export function StatsModal({ isOpen, onClose, stats }: Props) {
             { value: bestStreak, label: 'Best' },
           ].map(({ value, label }) => (
             <div key={label}>
-              <div className="text-2xl font-bold text-gray-900">{value}</div>
-              <div className="text-xs text-gray-400">{label}</div>
+              <div className="text-2xl font-bold text-slate-900">{value}</div>
+              <div className="text-xs text-slate-400">{label}</div>
             </div>
           ))}
         </div>
 
-        {/* Distribution */}
         <div className="space-y-2">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
             Solved on clue
           </p>
-          <DistributionBar label="🔴 Hard"   count={distribution.hard}   total={played} color="#dc2626" />
-          <DistributionBar label="🟡 Medium" count={distribution.medium} total={played} color="#d97706" />
-          <DistributionBar label="🟢 Easy"   count={distribution.easy}   total={played} color="#16a34a" />
-          <DistributionBar label="✗ Miss"    count={distribution.miss}   total={played} color="#9ca3af" />
+          <DistributionBar label="🔴 Hard"   count={distribution.hard}   total={played} color="#ef4444" />
+          <DistributionBar label="🟡 Medium" count={distribution.medium} total={played} color="#f59e0b" />
+          <DistributionBar label="🟢 Easy"   count={distribution.easy}   total={played} color="#22c55e" />
+          <DistributionBar label="✗ Miss"    count={distribution.miss}   total={played} color="#94a3b8" />
         </div>
       </div>
     </div>
