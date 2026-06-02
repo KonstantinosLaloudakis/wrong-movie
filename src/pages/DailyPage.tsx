@@ -5,7 +5,11 @@ import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
 import { ShareButton } from '../components/ShareButton';
 
-export function DailyPage() {
+interface Props {
+  onShowStats: () => void;
+}
+
+export function DailyPage({ onShowStats }: Props) {
   const { puzzle, loading, error, state, savedResult, streak, submitGuess } =
     useDailyPuzzle();
 
@@ -79,6 +83,7 @@ export function DailyPage() {
               movieTitle={puzzle.title}
               posterUrl={puzzle.posterUrl}
               difficulty={state.revealedDifficulty}
+              onShowStats={onShowStats}
             />
             <ShareButton
               puzzleNumber={puzzle.puzzleNumber}
