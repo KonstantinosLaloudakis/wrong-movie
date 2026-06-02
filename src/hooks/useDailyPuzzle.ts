@@ -8,6 +8,8 @@ import type {
   DailyResult,
   StreakData,
   Difficulty,
+  GameHistory,
+  GameResultType,
 } from '../types';
 
 const DIFFICULTY_ORDER: Difficulty[] = ['hard', 'medium', 'easy'];
@@ -36,6 +38,10 @@ export function useDailyPuzzle() {
     best: 0,
     lastPlayedDate: null,
   });
+  const [, setGameHistory] = useLocalStorage<GameHistory>(
+    'game-history',
+    []
+  );
 
   useEffect(() => {
     fetchDailyPuzzle();
@@ -83,6 +89,13 @@ export function useDailyPuzzle() {
     setLoading(false);
   }
 
+  function appendHistory(result: GameResultType, puzzleNumber: number) {
+    setGameHistory((prev) => {
+      if (prev.some((e) => e.date === todayStr())) return prev; // idempotent
+      return [...prev, { date: todayStr(), result, puzzleNumber }];
+    });
+  }
+
   function submitGuess(guess: string): boolean {
     if (!puzzle || state.result !== 'unanswered') return false;
 
@@ -104,6 +117,7 @@ export function useDailyPuzzle() {
         pointsEarned: points,
       });
       updateStreak(true);
+      appendHistory(state.revealedDifficulty, puzzle.puzzleNumber);
       setState({ ...state, guesses: newGuesses, result: 'correct' });
       return true;
     } else if (currentIndex < DIFFICULTY_ORDER.length - 1) {
@@ -122,6 +136,7 @@ export function useDailyPuzzle() {
         pointsEarned: 0,
       });
       updateStreak(false);
+      appendHistory('miss', puzzle.puzzleNumber);
       setState({ ...state, guesses: newGuesses, result: 'wrong' });
       return false;
     }
