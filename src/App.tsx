@@ -10,16 +10,20 @@ function AppShell() {
   const stats = useStats();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white px-4 py-3 shadow-sm">
+    <div className="min-h-screen bg-slate-50">
+      <header className="border-b border-slate-200 bg-white px-4 py-3">
         <div className="mx-auto flex max-w-lg items-center justify-between">
-          <h1 className="text-lg font-bold text-gray-900">🎬 Wrong Movie</h1>
-          <nav className="flex items-center gap-4 text-sm font-medium">
+          <h1 className="font-display text-xl font-black tracking-tight text-slate-900">
+            🎬 Wrong Movie
+          </h1>
+          <nav className="flex items-center gap-1 text-sm font-semibold">
             <NavLink
               to="/"
               end
               className={({ isActive }) =>
-                isActive ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-800'
+                isActive
+                  ? 'rounded-md bg-slate-100 px-3 py-1.5 text-slate-900'
+                  : 'rounded-md px-3 py-1.5 text-slate-500 hover:text-slate-800'
               }
             >
               Daily
@@ -27,7 +31,9 @@ function AppShell() {
             <NavLink
               to="/play"
               className={({ isActive }) =>
-                isActive ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-800'
+                isActive
+                  ? 'rounded-md bg-slate-100 px-3 py-1.5 text-slate-900'
+                  : 'rounded-md px-3 py-1.5 text-slate-500 hover:text-slate-800'
               }
             >
               Endless
@@ -35,7 +41,7 @@ function AppShell() {
             <button
               aria-label="stats"
               onClick={() => setStatsOpen(true)}
-              className="text-gray-500 hover:text-gray-800"
+              className="ml-1 rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200"
             >
               📊
             </button>
