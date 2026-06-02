@@ -100,6 +100,7 @@ export function GuessInput({
           autoComplete="off"
           autoCapitalize="off"
           spellCheck={false}
+          role="combobox"
           aria-expanded={showDropdown}
           aria-controls="suggestions-list"
           aria-activedescendant={activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined}

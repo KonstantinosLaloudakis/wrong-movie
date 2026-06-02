@@ -31,6 +31,11 @@ export function EndlessPage() {
     }
   }
 
+  function handleNext() {
+    setInputValue('');
+    fetchNext();
+  }
+
   if (loading && !puzzle) {
     return <div className="p-8 text-center text-gray-500">Loading…</div>;
   }
@@ -89,7 +94,7 @@ export function EndlessPage() {
             movieTitle={puzzle.title}
             posterUrl={puzzle.posterUrl}
             difficulty={state.revealedDifficulty}
-            onNext={fetchNext}
+            onNext={handleNext}
             isEndless
           />
         )}
