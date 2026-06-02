@@ -22,10 +22,10 @@ export function ClueDisplay({ clues, revealedDifficulty }: Props) {
         const shown = i <= revealedIndex;
         return (
           <div
-            key={diff}
-            className={`rounded-lg border p-4 transition-all ${
+            key={`${diff}-${shown}`}
+            className={`rounded-lg border p-4 ${
               shown
-                ? 'border-gray-200 bg-white shadow-sm'
+                ? 'clue-entering border-gray-200 bg-white shadow-sm'
                 : 'border-dashed border-gray-200 bg-gray-50 opacity-40'
             }`}
           >
