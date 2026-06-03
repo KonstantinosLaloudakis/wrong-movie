@@ -66,4 +66,18 @@ describe('StatsModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Endless' }));
     expect(screen.queryByText(/streak/i)).not.toBeInTheDocument();
   });
+
+  it('resets to daily tab when modal is closed and reopened', () => {
+    const { rerender } = render(
+      <StatsModal isOpen={true} onClose={vi.fn()} stats={stats} endlessStats={endlessStats} />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Endless' }));
+    rerender(
+      <StatsModal isOpen={false} onClose={vi.fn()} stats={stats} endlessStats={endlessStats} />
+    );
+    rerender(
+      <StatsModal isOpen={true} onClose={vi.fn()} stats={stats} endlessStats={endlessStats} />
+    );
+    expect(screen.getByText('20')).toBeInTheDocument(); // daily played count visible = daily tab active
+  });
 });

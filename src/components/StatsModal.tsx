@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Stats, EndlessStats } from '../types';
 
 interface Props {
@@ -34,6 +34,10 @@ function DistributionBar({ label, count, total, color }: BarProps) {
 
 export function StatsModal({ isOpen, onClose, stats, endlessStats }: Props) {
   const [tab, setTab] = useState<'daily' | 'endless'>('daily');
+
+  useEffect(() => {
+    if (!isOpen) setTab('daily');
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
