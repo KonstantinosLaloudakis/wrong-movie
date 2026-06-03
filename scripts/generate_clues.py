@@ -34,8 +34,12 @@ names, no source film titles) + movie hook. 1-2 sentences.
 
 HARD — Cryptically describe just 1 famous role without naming it or its source film + movie hook.
 Every word should point to a specific role, not a generic archetype.
-  Good: "a barefoot adventurer burdened by a cursed precious object" (points to Frodo specifically)
+The subject of your clue MUST be a specific famous CHARACTER from another film — not a setting,
+situation, theme, or abstract concept. Start from the character, not the movie being clued.
+  Good: "a barefoot adventurer burdened by a cursed precious object" (a specific person: Frodo)
   Bad:  "a reluctant hero" (too generic — could be anyone)
+  Bad:  "a chamber where citizens deliberate over a verdict" (describes the MOVIE's setting, not a
+        famous role — if your clue has no specific famous character as its subject, rewrite it)
   Example: "A barefoot adventurer burdened by a cursed precious object wakes up on Valentine's Day
   with no memory of the woman he loved"
 
