@@ -9,7 +9,7 @@ import { useEndlessStats } from './hooks/useEndlessStats';
 function AppShell() {
   const [statsOpen, setStatsOpen] = useState(false);
   const stats = useStats();
-  const { stats: endlessStats } = useEndlessStats();
+  const { stats: endlessStats, saveEndlessResult } = useEndlessStats();
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -53,7 +53,7 @@ function AppShell() {
       <main>
         <Routes>
           <Route path="/" element={<DailyPage onShowStats={() => setStatsOpen(true)} />} />
-          <Route path="/play" element={<EndlessPage />} />
+          <Route path="/play" element={<EndlessPage saveEndlessResult={saveEndlessResult} />} />
         </Routes>
       </main>
       <StatsModal

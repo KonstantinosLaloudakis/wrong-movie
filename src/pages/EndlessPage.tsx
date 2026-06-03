@@ -4,10 +4,15 @@ import { getMovieSuggestions } from '../hooks/useMovieSuggestions';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
+import type { GameResultType } from '../types';
 
-export function EndlessPage() {
+interface Props {
+  saveEndlessResult: (result: GameResultType) => void;
+}
+
+export function EndlessPage({ saveEndlessResult }: Props) {
   const { puzzle, loading, sessionScore, state, fetchNext, submitGuess, movieTitles } =
-    useEndlessGame();
+    useEndlessGame(saveEndlessResult);
 
   const [inputValue, setInputValue] = useState('');
   const [shaking, setShaking] = useState(false);

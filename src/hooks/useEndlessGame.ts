@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { isCorrectGuess } from '../lib/guessMatch';
-import { useEndlessStats } from './useEndlessStats';
-import type { Puzzle, RoundState, Difficulty } from '../types';
+import type { Puzzle, RoundState, Difficulty, GameResultType } from '../types';
 
 const DIFFICULTY_ORDER: Difficulty[] = ['hard', 'medium', 'easy'];
 const POINTS_MAP: Record<Difficulty, number> = { hard: 3, medium: 2, easy: 1 };
 
-export function useEndlessGame() {
+export function useEndlessGame(saveEndlessResult: (result: GameResultType) => void) {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [loading, setLoading] = useState(false);
   const [sessionScore, setSessionScore] = useState(0);
@@ -19,7 +18,6 @@ export function useEndlessGame() {
     showAllClues: false,
   });
   const [movieTitles, setMovieTitles] = useState<string[]>([]);
-  const { saveEndlessResult } = useEndlessStats();
 
   useEffect(() => {
     supabase.rpc('get_movie_titles').then(({ data }) => {
