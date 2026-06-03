@@ -4,10 +4,12 @@ import { DailyPage } from './pages/DailyPage';
 import { EndlessPage } from './pages/EndlessPage';
 import { StatsModal } from './components/StatsModal';
 import { useStats } from './hooks/useStats';
+import { useEndlessStats } from './hooks/useEndlessStats';
 
 function AppShell() {
   const [statsOpen, setStatsOpen] = useState(false);
   const stats = useStats();
+  const { stats: endlessStats } = useEndlessStats();
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -58,6 +60,7 @@ function AppShell() {
         isOpen={statsOpen}
         onClose={() => setStatsOpen(false)}
         stats={stats}
+        endlessStats={endlessStats}
       />
     </div>
   );
