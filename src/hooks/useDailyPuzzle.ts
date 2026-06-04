@@ -92,6 +92,8 @@ export function useDailyPuzzle() {
       normalizedTitle: row.normalized_title,
       altTitles: row.alt_titles ?? [],
       posterUrl: row.poster_url ?? null,
+      imdbId: row.imdb_id ?? null,
+      releaseYear: row.release_year ?? null,
       clues: {
         hard: { id: row.clue_hard_id, text: row.hard_clue, difficulty: 'hard' },
         medium: { id: row.clue_medium_id, text: row.medium_clue, difficulty: 'medium' },

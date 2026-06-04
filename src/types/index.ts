@@ -13,6 +13,8 @@ export interface Puzzle {
   normalizedTitle: string;
   altTitles: string[];
   posterUrl: string | null;
+  imdbId: string | null;
+  releaseYear: number | null;
   clues: {
     hard: Clue;
     medium: Clue;
