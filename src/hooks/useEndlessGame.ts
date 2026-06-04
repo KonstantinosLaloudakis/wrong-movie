@@ -28,6 +28,10 @@ export function useEndlessGame(
     });
   }, []);
 
+  useEffect(() => {
+    setPlayedIds([]);
+  }, [activeFilter]);
+
   const fetchNext = useCallback(async () => {
     setLoading(true);
     setPuzzle(null);
@@ -44,9 +48,8 @@ export function useEndlessGame(
     if (activeFilter?.kind === 'decade') params.p_decade       = activeFilter.decadeValue;
     if (activeFilter?.kind === 'pack')   params.p_included_ids = activeFilter.movieIds;
 
-    const { data, error } = await supabase.rpc('get_random_movie', params);
-
     try {
+      const { data, error } = await supabase.rpc('get_random_movie', params);
       if (error || !data?.length) {
         return;
       }
