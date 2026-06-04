@@ -31,6 +31,8 @@ export function EndlessPage({ saveEndlessResult }: Props) {
     return null;
   }, [activeFilterId, activePack]);
 
+  const didMountRef = useRef(false);
+
   const { puzzle, loading, sessionScore, state, fetchNext, submitGuess, movieTitles } =
     useEndlessGame(saveEndlessResult, activeFilter);
 
@@ -55,6 +57,17 @@ export function EndlessPage({ saveEndlessResult }: Props) {
       if (shakeTimer.current) clearTimeout(shakeTimer.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    setInputValue('');
+    setShowYear(false);
+    fetchNext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeFilter]);
 
   useEffect(() => {
     if (!isDone) return;
@@ -86,9 +99,6 @@ export function EndlessPage({ saveEndlessResult }: Props) {
 
   function handleFilterSelect(id: string | null) {
     setActiveFilterId(id);
-    setInputValue('');
-    setShowYear(false);
-    fetchNext();
   }
 
   const activeFilterLabel = useMemo(() => {
