@@ -62,10 +62,10 @@ export function DailyPage({ onShowStats }: Props) {
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       <div className="mb-4 flex items-center justify-between">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+        <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
           Puzzle #{puzzle.puzzleNumber}
         </span>
-        <span className="flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700">
+        <span className="flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700 dark:border-orange-900 dark:bg-orange-950 dark:text-orange-300">
           🔥 Streak: {streak.current}
         </span>
       </div>
@@ -80,15 +80,15 @@ export function DailyPage({ onShowStats }: Props) {
         {state.revealedDifficulty === 'easy' && state.result === 'unanswered' && !alreadyPlayedToday && (
           <div className="mt-3 text-center">
             {showYear ? (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Released:{' '}
-                <span className="font-semibold text-slate-700">{puzzle.releaseYear}</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-200">{puzzle.releaseYear}</span>
               </p>
             ) : (
               <button
                 type="button"
                 onClick={() => setShowYear(true)}
-                className="text-xs text-slate-400 underline hover:text-slate-600"
+                className="text-xs text-slate-400 underline hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
               >
                 Reveal year
               </button>
@@ -112,7 +112,7 @@ export function DailyPage({ onShowStats }: Props) {
         {state.guesses.map((g, i) => (
           <div
             key={`${i}-${g}`}
-            className="flex items-center gap-2 rounded-lg border border-red-100 bg-white px-3 py-2 text-sm font-medium text-red-600"
+            className="flex items-center gap-2 rounded-lg border border-red-100 bg-white px-3 py-2 text-sm font-medium text-red-600 dark:border-red-900 dark:bg-slate-800 dark:text-red-400"
           >
             <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full border border-red-200 bg-red-50 text-[10px]">
               ✕
@@ -140,13 +140,13 @@ export function DailyPage({ onShowStats }: Props) {
         )}
 
         {alreadyPlayedToday && !isDone && (
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400">
             You've already played today. Come back tomorrow!
           </p>
         )}
       </div>
 
-      <footer className="mt-10 text-center text-xs text-slate-400">
+      <footer className="mt-10 text-center text-xs text-slate-400 dark:text-slate-600">
         This product uses the TMDb API but is not endorsed or certified by TMDb.
       </footer>
     </div>

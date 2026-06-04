@@ -78,8 +78,8 @@ export function EndlessPage({ saveEndlessResult }: Props) {
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       <div className="mb-4 flex items-center justify-between text-sm text-slate-500">
-        <span className="font-medium text-slate-700">Endless Mode</span>
-        <span>Score: {sessionScore}</span>
+        <span className="font-medium text-slate-700 dark:text-slate-300">Endless Mode</span>
+        <span className="dark:text-slate-400">Score: {sessionScore}</span>
       </div>
 
       <ClueDisplay
@@ -92,15 +92,15 @@ export function EndlessPage({ saveEndlessResult }: Props) {
         {state.revealedDifficulty === 'easy' && state.result === 'unanswered' && (
           <div className="mt-3 text-center">
             {showYear ? (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Released:{' '}
-                <span className="font-semibold text-slate-700">{puzzle.releaseYear}</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-200">{puzzle.releaseYear}</span>
               </p>
             ) : (
               <button
                 type="button"
                 onClick={() => setShowYear(true)}
-                className="text-xs text-slate-400 underline hover:text-slate-600"
+                className="text-xs text-slate-400 underline hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
               >
                 Reveal year
               </button>
@@ -125,7 +125,7 @@ export function EndlessPage({ saveEndlessResult }: Props) {
           state.guesses.map((g, i) => (
             <div
               key={`${i}-${g}`}
-              className="flex items-center gap-2 rounded-lg border border-red-100 bg-white px-3 py-2 text-sm font-medium text-red-600"
+              className="flex items-center gap-2 rounded-lg border border-red-100 bg-white px-3 py-2 text-sm font-medium text-red-600 dark:border-red-900 dark:bg-slate-800 dark:text-red-400"
             >
               <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full border border-red-200 bg-red-50 text-[10px]">
                 ✕
