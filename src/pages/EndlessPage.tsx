@@ -108,6 +108,7 @@ export function EndlessPage({ saveEndlessResult }: Props) {
             result={state.result}
             movieTitle={puzzle.title}
             posterUrl={puzzle.posterUrl}
+            imdbId={puzzle.imdbId}
             difficulty={state.revealedDifficulty}
             onNext={handleNext}
             isEndless

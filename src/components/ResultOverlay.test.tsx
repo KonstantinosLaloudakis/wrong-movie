@@ -62,4 +62,33 @@ describe('ResultOverlay', () => {
     );
     expect(screen.queryByRole('button', { name: /stats/i })).not.toBeInTheDocument();
   });
+
+  it('shows IMDb link when imdbId is provided', () => {
+    render(
+      <ResultOverlay
+        result="correct"
+        movieTitle="Inception"
+        posterUrl={null}
+        difficulty="hard"
+        imdbId="tt1375666"
+      />
+    );
+    const link = screen.getByRole('link', { name: /imdb/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', 'https://www.imdb.com/title/tt1375666');
+    expect(link).toHaveAttribute('target', '_blank');
+  });
+
+  it('does not show IMDb link when imdbId is null', () => {
+    render(
+      <ResultOverlay
+        result="correct"
+        movieTitle="Inception"
+        posterUrl={null}
+        difficulty="hard"
+        imdbId={null}
+      />
+    );
+    expect(screen.queryByRole('link', { name: /imdb/i })).not.toBeInTheDocument();
+  });
 });

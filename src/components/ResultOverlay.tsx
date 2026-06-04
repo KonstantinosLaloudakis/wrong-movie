@@ -15,6 +15,7 @@ interface Props {
   movieTitle: string;
   posterUrl: string | null;
   difficulty: Difficulty;
+  imdbId?: string | null;
   onNext?: () => void;
   onShowStats?: () => void;
   isEndless?: boolean;
@@ -25,6 +26,7 @@ export function ResultOverlay({
   movieTitle,
   posterUrl,
   difficulty,
+  imdbId,
   onNext,
   onShowStats,
   isEndless,
@@ -70,6 +72,17 @@ export function ResultOverlay({
           alt={movieTitle}
           className="mx-auto mt-3 h-72 w-auto rounded object-cover shadow"
         />
+      )}
+
+      {imdbId && (
+        <a
+          href={`https://www.imdb.com/title/${imdbId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-block text-xs text-slate-400 hover:text-slate-600 underline"
+        >
+          View on IMDb →
+        </a>
       )}
 
       <div className="mt-4 flex justify-center gap-3">
