@@ -39,7 +39,10 @@ export function EndlessPage({ saveEndlessResult }: Props) {
   useEffect(() => {
     if (!isDone) return;
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Enter') handleNext();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleNext();
+      }
     }
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -89,7 +92,7 @@ export function EndlessPage({ saveEndlessResult }: Props) {
       />
 
       <div className="mt-4 space-y-2">
-        {state.revealedDifficulty === 'easy' && state.result === 'unanswered' && (
+        {state.revealedDifficulty === 'easy' && state.result === 'unanswered' && puzzle.releaseYear !== null && (
           <div className="mt-3 text-center">
             {showYear ? (
               <p className="text-sm text-slate-500 dark:text-slate-400">

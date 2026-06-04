@@ -77,7 +77,7 @@ export function DailyPage({ onShowStats }: Props) {
       />
 
       <div className="mt-4 space-y-2">
-        {state.revealedDifficulty === 'easy' && state.result === 'unanswered' && !alreadyPlayedToday && (
+        {state.revealedDifficulty === 'easy' && state.result === 'unanswered' && !alreadyPlayedToday && puzzle.releaseYear !== null && (
           <div className="mt-3 text-center">
             {showYear ? (
               <p className="text-sm text-slate-500 dark:text-slate-400">
