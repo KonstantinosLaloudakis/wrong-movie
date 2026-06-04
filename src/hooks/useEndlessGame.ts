@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { isCorrectGuess } from '../lib/guessMatch';
-import type { Puzzle, RoundState, Difficulty, GameResultType } from '../types';
+import type { Puzzle, RoundState, Difficulty, GameResultType, ActiveFilter } from '../types';
 
 const DIFFICULTY_ORDER: Difficulty[] = ['hard', 'medium', 'easy'];
 const POINTS_MAP: Record<Difficulty, number> = { hard: 3, medium: 2, easy: 1 };
 
-export function useEndlessGame(saveEndlessResult: (result: GameResultType) => void) {
+export function useEndlessGame(
+  saveEndlessResult: (result: GameResultType) => void,
+  activeFilter: ActiveFilter | null
+) {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [loading, setLoading] = useState(false);
   const [sessionScore, setSessionScore] = useState(0);
@@ -30,9 +33,18 @@ export function useEndlessGame(saveEndlessResult: (result: GameResultType) => vo
     setPuzzle(null);
     setState({ revealedDifficulty: 'hard', guesses: [], result: 'unanswered', showAllClues: false });
 
-    const { data, error } = await supabase.rpc('get_random_movie', {
-      excluded_ids: playedIds,
-    });
+    const params: {
+      excluded_ids: string[];
+      p_genre?: string;
+      p_decade?: number;
+      p_included_ids?: string[];
+    } = { excluded_ids: playedIds };
+
+    if (activeFilter?.kind === 'genre')  params.p_genre        = activeFilter.genreValue;
+    if (activeFilter?.kind === 'decade') params.p_decade       = activeFilter.decadeValue;
+    if (activeFilter?.kind === 'pack')   params.p_included_ids = activeFilter.movieIds;
+
+    const { data, error } = await supabase.rpc('get_random_movie', params);
 
     try {
       if (error || !data?.length) {
@@ -41,7 +53,7 @@ export function useEndlessGame(saveEndlessResult: (result: GameResultType) => vo
 
       const row = data[0];
       setPuzzle({
-        puzzleNumber: 0, // not applicable in endless mode
+        puzzleNumber: 0,
         movieId: row.movie_id,
         title: row.title,
         normalizedTitle: row.normalized_title,
@@ -50,16 +62,16 @@ export function useEndlessGame(saveEndlessResult: (result: GameResultType) => vo
         imdbId: row.imdb_id ?? null,
         releaseYear: row.release_year ?? null,
         clues: {
-          hard: { id: '', text: row.hard_clue, difficulty: 'hard' },
+          hard:   { id: '', text: row.hard_clue,   difficulty: 'hard' },
           medium: { id: '', text: row.medium_clue, difficulty: 'medium' },
-          easy: { id: '', text: row.easy_clue, difficulty: 'easy' },
+          easy:   { id: '', text: row.easy_clue,   difficulty: 'easy' },
         },
       });
       setPlayedIds((prev) => [...prev, row.movie_id]);
     } finally {
       setLoading(false);
     }
-  }, [playedIds]);
+  }, [playedIds, activeFilter]);
 
   function submitGuess(guess: string): boolean {
     if (!puzzle || state.result !== 'unanswered') return false;
