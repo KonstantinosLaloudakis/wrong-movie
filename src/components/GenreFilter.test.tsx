@@ -1,12 +1,13 @@
 // src/components/GenreFilter.test.tsx
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { GenreFilter } from './GenreFilter';
 import type { SeasonalPack } from '../config/packs';
 
-const noop = vi.fn();
+let noop: ReturnType<typeof vi.fn>;
 
 describe('GenreFilter', () => {
+  beforeEach(() => { noop = vi.fn(); });
   it('renders All chip and all genre/decade chips', () => {
     render(<GenreFilter activeId={null} onSelect={noop} activePack={null} />);
     expect(screen.getByRole('button', { name: /all/i })).toBeInTheDocument();
