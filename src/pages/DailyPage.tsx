@@ -16,6 +16,7 @@ export function DailyPage({ onShowStats }: Props) {
 
   const [inputValue, setInputValue] = useState('');
   const [shaking, setShaking] = useState(false);
+  const [showYear, setShowYear] = useState(false);
   const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const suggestions = useMemo(
@@ -76,6 +77,25 @@ export function DailyPage({ onShowStats }: Props) {
       />
 
       <div className="mt-4 space-y-2">
+        {state.revealedDifficulty === 'easy' && state.result === 'unanswered' && !alreadyPlayedToday && (
+          <div className="mt-3 text-center">
+            {showYear ? (
+              <p className="text-sm text-slate-500">
+                Released:{' '}
+                <span className="font-semibold text-slate-700">{puzzle.releaseYear}</span>
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowYear(true)}
+                className="text-xs text-slate-400 underline hover:text-slate-600"
+              >
+                Reveal year
+              </button>
+            )}
+          </div>
+        )}
+
         {!isDone && !alreadyPlayedToday && (
           <div className={shaking ? 'shake' : ''}>
             <GuessInput
