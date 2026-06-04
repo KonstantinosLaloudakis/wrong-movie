@@ -1,4 +1,6 @@
 -- Add imdb_id and release_year to both puzzle RPCs
+DROP FUNCTION IF EXISTS get_daily_puzzle(date);
+DROP FUNCTION IF EXISTS get_random_movie(uuid[]);
 
 CREATE OR REPLACE FUNCTION get_daily_puzzle(p_date date)
 RETURNS TABLE (
