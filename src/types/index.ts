@@ -80,3 +80,8 @@ export interface Stats {
     miss: number;
   };
 }
+
+export type ActiveFilter =
+  | { kind: 'genre';  genreValue: string }
+  | { kind: 'decade'; decadeValue: number }
+  | { kind: 'pack';   movieIds: string[] };
