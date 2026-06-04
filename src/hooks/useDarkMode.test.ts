@@ -34,5 +34,6 @@ describe('useDarkMode', () => {
     localStorage.setItem('dark-mode', 'true');
     const { result } = renderHook(() => useDarkMode());
     expect(result.current.isDark).toBe(true);
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
   });
 });
