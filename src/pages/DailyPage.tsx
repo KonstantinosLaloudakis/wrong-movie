@@ -109,7 +109,7 @@ export function DailyPage({ onShowStats }: Props) {
           </div>
         )}
 
-        {state.guesses.map((g, i) => (
+        {!isDone && state.guesses.map((g, i) => (
           <div
             key={`${i}-${g}`}
             className="flex items-center gap-2 rounded-lg border border-red-100 bg-white px-3 py-2 text-sm font-medium text-red-600 dark:border-red-900 dark:bg-slate-800 dark:text-red-400"
