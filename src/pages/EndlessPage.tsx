@@ -1,18 +1,38 @@
+// src/pages/EndlessPage.tsx
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useEndlessGame } from '../hooks/useEndlessGame';
 import { getMovieSuggestions } from '../hooks/useMovieSuggestions';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
-import type { GameResultType } from '../types';
+import { GenreFilter } from '../components/GenreFilter';
+import { GENRE_FILTERS } from '../config/genres';
+import { getActivePack } from '../config/packs';
+import type { GameResultType, ActiveFilter } from '../types';
 
 interface Props {
   saveEndlessResult: (result: GameResultType) => void;
 }
 
 export function EndlessPage({ saveEndlessResult }: Props) {
+  const activePack = useMemo(() => getActivePack(), []);
+
+  const [activeFilterId, setActiveFilterId] = useState<string | null>(null);
+
+  const activeFilter = useMemo((): ActiveFilter | null => {
+    if (!activeFilterId) return null;
+    if (activePack && activeFilterId === activePack.id) {
+      return { kind: 'pack', movieIds: activePack.movieIds };
+    }
+    const opt = GENRE_FILTERS.find((f) => f.id === activeFilterId);
+    if (!opt) return null;
+    if (opt.kind === 'genre')  return { kind: 'genre',  genreValue:  opt.genreValue };
+    if (opt.kind === 'decade') return { kind: 'decade', decadeValue: opt.decadeValue };
+    return null;
+  }, [activeFilterId, activePack]);
+
   const { puzzle, loading, sessionScore, state, fetchNext, submitGuess, movieTitles } =
-    useEndlessGame(saveEndlessResult);
+    useEndlessGame(saveEndlessResult, activeFilter);
 
   const [inputValue, setInputValue] = useState('');
   const [shaking, setShaking] = useState(false);
@@ -64,6 +84,19 @@ export function EndlessPage({ saveEndlessResult }: Props) {
     fetchNext();
   }
 
+  function handleFilterSelect(id: string | null) {
+    setActiveFilterId(id);
+    setInputValue('');
+    setShowYear(false);
+    fetchNext();
+  }
+
+  const activeFilterLabel = useMemo(() => {
+    if (!activeFilterId) return null;
+    if (activePack && activeFilterId === activePack.id) return activePack.name;
+    return GENRE_FILTERS.find((f) => f.id === activeFilterId)?.label ?? null;
+  }, [activeFilterId, activePack]);
+
   if (loading && !puzzle) {
     return <div className="p-8 text-center text-slate-500">Loading…</div>;
   }
@@ -71,7 +104,11 @@ export function EndlessPage({ saveEndlessResult }: Props) {
   if (!loading && !puzzle) {
     return (
       <div className="p-8 text-center">
-        <p className="text-slate-500">No more movies available — impressive!</p>
+        <p className="text-slate-500">
+          {activeFilterLabel
+            ? `No more ${activeFilterLabel} movies available — try a different filter or switch to All.`
+            : 'No more movies available — impressive!'}
+        </p>
       </div>
     );
   }
@@ -80,9 +117,17 @@ export function EndlessPage({ saveEndlessResult }: Props) {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <div className="mb-4 flex items-center justify-between text-sm text-slate-500">
+      <div className="mb-3 flex items-center justify-between text-sm text-slate-500">
         <span className="font-medium text-slate-700 dark:text-slate-300">Endless Mode</span>
         <span className="dark:text-slate-400">Score: {sessionScore}</span>
+      </div>
+
+      <div className="mb-4">
+        <GenreFilter
+          activeId={activeFilterId}
+          onSelect={handleFilterSelect}
+          activePack={activePack}
+        />
       </div>
 
       <ClueDisplay
