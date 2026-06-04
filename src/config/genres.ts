@@ -1,14 +1,7 @@
 // src/config/genres.ts
-export type FilterKind = 'genre' | 'decade';
-
-export interface FilterOption {
-  id: string;
-  label: string;
-  emoji: string;
-  kind: FilterKind;
-  genreValue?: string;   // TMDb genre string — present when kind === 'genre'
-  decadeValue?: number;  // e.g. 1990 — present when kind === 'decade'
-}
+export type FilterOption =
+  | { id: string; label: string; emoji: string; kind: 'genre';  genreValue: string }
+  | { id: string; label: string; emoji: string; kind: 'decade'; decadeValue: number };
 
 export const GENRE_FILTERS: FilterOption[] = [
   { id: 'action',    label: 'Action',    emoji: '💥', kind: 'genre',  genreValue: 'Action' },
