@@ -78,4 +78,30 @@ describe('GuessInput', () => {
     renderInput({ value: '' });
     expect(screen.getByRole('button', { name: /guess/i })).toBeDisabled();
   });
+
+  it('Escape clears the input value when dropdown is already closed', () => {
+    const onChange = vi.fn();
+    renderInput({ value: 'Inception', onChange, suggestions: [] });
+    const input = screen.getByRole('combobox');
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(onChange).toHaveBeenCalledWith('');
+  });
+
+  it('first Escape closes dropdown, second Escape clears value', () => {
+    const onChange = vi.fn();
+    renderInput({ value: 'da', onChange, suggestions: SUGGESTIONS });
+    const input = screen.getByRole('combobox');
+    // First Escape: close dropdown
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(onChange).not.toHaveBeenCalled();
+    // Second Escape: clear value
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(onChange).toHaveBeenCalledWith('');
+  });
+
+  it('renders input with autoFocus when autoFocus prop is true', () => {
+    renderInput({ autoFocus: true });
+    expect(screen.getByRole('combobox')).toHaveFocus();
+  });
 });

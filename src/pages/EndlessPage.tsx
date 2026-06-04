@@ -34,6 +34,15 @@ export function EndlessPage({ saveEndlessResult }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isDone) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Enter') handleNext();
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isDone]); // eslint-disable-line react-hooks/exhaustive-deps
+
   function handleGuess(guess: string) {
     const correct = submitGuess(guess);
     setInputValue('');
@@ -105,6 +114,7 @@ export function EndlessPage({ saveEndlessResult }: Props) {
               value={inputValue}
               onChange={setInputValue}
               onSubmit={handleGuess}
+              autoFocus={true}
               suggestions={suggestions}
               onSuggestionSelect={setInputValue}
             />

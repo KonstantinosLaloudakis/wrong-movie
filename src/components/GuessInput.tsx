@@ -5,6 +5,7 @@ interface Props {
   onChange: (value: string) => void;
   onSubmit: (guess: string) => void;
   disabled?: boolean;
+  autoFocus?: boolean;
   suggestions?: string[];
   onSuggestionSelect?: (title: string) => void;
 }
@@ -28,6 +29,7 @@ export function GuessInput({
   onChange,
   onSubmit,
   disabled,
+  autoFocus,
   suggestions = [],
   onSuggestionSelect,
 }: Props) {
@@ -56,6 +58,14 @@ export function GuessInput({
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Escape') {
+      if (open) {
+        setOpen(false);
+      } else {
+        onChange('');
+      }
+      return;
+    }
     if (!open || suggestions.length === 0) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -66,8 +76,6 @@ export function GuessInput({
     } else if (e.key === 'Enter' && activeIndex >= 0) {
       e.preventDefault();
       onSuggestionSelect?.(suggestions[activeIndex]);
-      setOpen(false);
-    } else if (e.key === 'Escape') {
       setOpen(false);
     }
   }
@@ -95,6 +103,7 @@ export function GuessInput({
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           disabled={disabled}
+          autoFocus={autoFocus}
           placeholder="Type the movie title…"
           className="flex-1 rounded-lg border-2 border-slate-200 px-4 py-2 text-sm outline-none transition-colors focus:border-slate-900 disabled:bg-slate-100"
           autoComplete="off"

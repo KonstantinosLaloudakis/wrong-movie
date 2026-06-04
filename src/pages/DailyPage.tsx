@@ -102,6 +102,7 @@ export function DailyPage({ onShowStats }: Props) {
               value={inputValue}
               onChange={setInputValue}
               onSubmit={handleGuess}
+              autoFocus={true}
               suggestions={suggestions}
               onSuggestionSelect={handleSuggestionSelect}
             />
