@@ -5,11 +5,13 @@ import { EndlessPage } from './pages/EndlessPage';
 import { StatsModal } from './components/StatsModal';
 import { useStats } from './hooks/useStats';
 import { useEndlessStats } from './hooks/useEndlessStats';
+import { useDarkMode } from './hooks/useDarkMode';
 
 function AppShell() {
   const [statsOpen, setStatsOpen] = useState(false);
   const stats = useStats();
   const { stats: endlessStats, saveEndlessResult } = useEndlessStats();
+  const { isDark, toggleDarkMode } = useDarkMode();
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -46,6 +48,13 @@ function AppShell() {
               className="ml-1 rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200"
             >
               📊
+            </button>
+            <button
+              aria-label="toggle dark mode"
+              onClick={toggleDarkMode}
+              className="ml-1 rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+            >
+              {isDark ? '☀️' : '🌙'}
             </button>
           </nav>
         </div>
