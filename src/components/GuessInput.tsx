@@ -105,7 +105,7 @@ export function GuessInput({
           disabled={disabled}
           autoFocus={autoFocus}
           placeholder="Type the movie title…"
-          className="flex-1 rounded-lg border-2 border-slate-200 px-4 py-2 text-sm outline-none transition-colors focus:border-slate-900 disabled:bg-slate-100"
+          className="flex-1 rounded-lg border-2 border-slate-200 px-4 py-2 text-sm outline-none transition-colors focus:border-slate-900 disabled:bg-slate-100 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-400 dark:focus:border-slate-300 dark:disabled:bg-slate-800"
           autoComplete="off"
           autoCapitalize="off"
           spellCheck={false}
@@ -117,7 +117,7 @@ export function GuessInput({
         <button
           type="submit"
           disabled={disabled || !value.trim()}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
         >
           Guess
         </button>
@@ -127,7 +127,7 @@ export function GuessInput({
         <ul
           id="suggestions-list"
           role="listbox"
-          className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden"
+          className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden dark:border-slate-700 dark:bg-slate-800"
         >
           {suggestions.map((title, i) => (
             <li
@@ -145,8 +145,8 @@ export function GuessInput({
               }}
               className={`px-4 py-2 text-sm cursor-pointer ${
                 i === activeIndex
-                  ? 'bg-slate-100 text-slate-900'
-                  : 'text-slate-700 hover:bg-slate-50'
+                  ? 'bg-slate-100 text-slate-900 dark:bg-slate-700 dark:text-white'
+                  : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
             >
               {highlightMatch(title, value)}

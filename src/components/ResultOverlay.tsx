@@ -48,7 +48,7 @@ export function ResultOverlay({
   const badge = BADGE_CONFIG[difficulty];
 
   return (
-    <div className="mt-4 rounded-xl border border-slate-200 bg-white p-5 text-center shadow-sm">
+    <div className="mt-4 rounded-xl border border-slate-200 bg-white p-5 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
       {result === 'correct' ? (
         <div className="mb-3 flex items-center justify-center gap-2">
           <span
@@ -64,7 +64,7 @@ export function ResultOverlay({
         <p className="mb-1 text-lg font-bold text-red-500">Not quite — the answer was:</p>
       )}
 
-      <p className="text-xl font-semibold text-slate-900">{movieTitle}</p>
+      <p className="text-xl font-semibold text-slate-900 dark:text-white">{movieTitle}</p>
 
       {posterUrl && (
         <img
@@ -79,7 +79,7 @@ export function ResultOverlay({
           href={`https://www.imdb.com/title/${imdbId}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-block text-xs text-slate-400 hover:text-slate-600 underline"
+          className="mt-2 inline-block text-xs text-slate-400 hover:text-slate-600 underline dark:text-slate-500 dark:hover:text-slate-300"
         >
           View on IMDb →
         </a>
@@ -90,7 +90,7 @@ export function ResultOverlay({
           <button
             type="button"
             onClick={onNext}
-            className="rounded-lg bg-slate-900 px-6 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            className="rounded-lg bg-slate-900 px-6 py-2 text-sm font-medium text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
           >
             Next Movie →
           </button>
@@ -100,7 +100,7 @@ export function ResultOverlay({
             type="button"
             aria-label="stats"
             onClick={onShowStats}
-            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
           >
             📊 Stats
           </button>

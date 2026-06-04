@@ -38,8 +38,8 @@ export function ClueDisplay({ clues, revealedDifficulty, showAll = false }: Prop
             key={`${diff}-${shown}`}
             className={
               shown
-                ? `clue-entering rounded-xl border border-slate-200 border-l-4 bg-white p-4 shadow-sm ${BORDER_CLASSES[diff]}`
-                : 'rounded-xl border border-dashed border-slate-200 border-l-4 border-l-slate-200 bg-slate-50 p-4 opacity-40'
+                ? `clue-entering rounded-xl border border-slate-200 border-l-4 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 ${BORDER_CLASSES[diff]}`
+                : 'rounded-xl border border-dashed border-slate-200 border-l-4 border-l-slate-200 bg-slate-50 p-4 opacity-40 dark:border-slate-700 dark:border-l-slate-700 dark:bg-slate-900'
             }
           >
             <div
@@ -50,9 +50,9 @@ export function ClueDisplay({ clues, revealedDifficulty, showAll = false }: Prop
               {LABELS[diff]}
             </div>
             {shown ? (
-              <p className="text-sm leading-relaxed text-slate-600">{clues[diff].text}</p>
+              <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{clues[diff].text}</p>
             ) : (
-              <p className="text-sm italic text-slate-400">
+              <p className="text-sm italic text-slate-400 dark:text-slate-500">
                 Reveal by guessing incorrectly
               </p>
             )}

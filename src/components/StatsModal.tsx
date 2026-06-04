@@ -19,8 +19,8 @@ function DistributionBar({ label, count, total, color }: BarProps) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
     <div className="flex items-center gap-2">
-      <span className="w-16 text-xs text-slate-500">{label}</span>
-      <div className="relative h-5 flex-1 overflow-hidden rounded bg-slate-100">
+      <span className="w-16 text-xs text-slate-500 dark:text-slate-400">{label}</span>
+      <div className="relative h-5 flex-1 overflow-hidden rounded bg-slate-100 dark:bg-slate-700">
         <div
           className="flex h-full items-center justify-end rounded pr-2 transition-all duration-500"
           style={{ width: `${count > 0 ? Math.max(pct, 4) : 0}%`, backgroundColor: color }}
@@ -50,22 +50,22 @@ export function StatsModal({ isOpen, onClose, stats, endlessStats }: Props) {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-xl"
+        className="relative w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-700 dark:bg-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           aria-label="close"
           onClick={onClose}
-          className="absolute right-4 top-4 text-lg text-slate-400 hover:text-slate-700"
+          className="absolute right-4 top-4 text-lg text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300"
         >
           ×
         </button>
 
-        <div className="mb-5 flex gap-1 rounded-lg bg-slate-100 p-1">
+        <div className="mb-5 flex gap-1 rounded-lg bg-slate-100 p-1 dark:bg-slate-700">
           <button
             onClick={() => setTab('daily')}
             className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${
-              tab === 'daily' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
+              tab === 'daily' ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-600 dark:text-white' : 'text-slate-500 dark:text-slate-400'
             }`}
           >
             Daily
@@ -73,7 +73,7 @@ export function StatsModal({ isOpen, onClose, stats, endlessStats }: Props) {
           <button
             onClick={() => setTab('endless')}
             className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${
-              tab === 'endless' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
+              tab === 'endless' ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-600 dark:text-white' : 'text-slate-500 dark:text-slate-400'
             }`}
           >
             Endless
@@ -90,14 +90,14 @@ export function StatsModal({ isOpen, onClose, stats, endlessStats }: Props) {
                 { value: bestStreak, label: 'Best' },
               ].map(({ value, label }) => (
                 <div key={label}>
-                  <div className="text-2xl font-bold text-slate-900">{value}</div>
-                  <div className="text-xs text-slate-400">{label}</div>
+                  <div className="text-2xl font-bold text-slate-900 dark:text-white">{value}</div>
+                  <div className="text-xs text-slate-400 dark:text-slate-500">{label}</div>
                 </div>
               ))}
             </div>
 
             <div className="space-y-2">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 Solved on clue
               </p>
               <DistributionBar label="🔴 Hard"   count={distribution.hard}   total={played} color="#ef4444" />
@@ -116,14 +116,14 @@ export function StatsModal({ isOpen, onClose, stats, endlessStats }: Props) {
                 { value: `${endlessStats.winRate}%`, label: 'Win %' },
               ].map(({ value, label }) => (
                 <div key={label}>
-                  <div className="text-2xl font-bold text-slate-900">{value}</div>
-                  <div className="text-xs text-slate-400">{label}</div>
+                  <div className="text-2xl font-bold text-slate-900 dark:text-white">{value}</div>
+                  <div className="text-xs text-slate-400 dark:text-slate-500">{label}</div>
                 </div>
               ))}
             </div>
 
             <div className="space-y-2">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 Solved on clue
               </p>
               <DistributionBar label="🔴 Hard"   count={endlessStats.distribution.hard}   total={endlessStats.played} color="#ef4444" />
