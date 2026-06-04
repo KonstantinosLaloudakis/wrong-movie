@@ -24,6 +24,8 @@ export function EndlessPage({ saveEndlessResult }: Props) {
     [movieTitles, inputValue]
   );
 
+  const isDone = state.result !== 'unanswered';
+
   useEffect(() => {
     fetchNext();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -72,8 +74,6 @@ export function EndlessPage({ saveEndlessResult }: Props) {
   }
 
   if (!puzzle) return null;
-
-  const isDone = state.result !== 'unanswered';
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
