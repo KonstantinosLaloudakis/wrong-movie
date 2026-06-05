@@ -23,6 +23,7 @@ export function buildSpotlightShareText(
 
 export function useSpotlightGame(spotlight: SpotlightConfig) {
   const [movies, setMovies] = useState<Puzzle[]>([]);
+  const [movieTitles, setMovieTitles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [roundOutcomes, setRoundOutcomes] = useState<GameResultType[]>([]);
@@ -51,28 +52,32 @@ export function useSpotlightGame(spotlight: SpotlightConfig) {
       } else if (spotlight.type === 'director' && spotlight.directorName) {
         params.p_director_name = spotlight.directorName;
       }
-      const { data } = await supabase.rpc('get_spotlight_movies', params);
-      if (data) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setMovies(
-          (data as any[]).map(row => ({
-            puzzleNumber: 0,
-            movieId: row.movie_id,
-            title: row.title,
-            normalizedTitle: row.normalized_title,
-            altTitles: row.alt_titles ?? [],
-            posterUrl: row.poster_url ?? null,
-            imdbId: row.imdb_id ?? null,
-            releaseYear: row.release_year ?? null,
-            clues: {
-              hard:   { id: '', text: row.hard_clue,   difficulty: 'hard'   as Difficulty },
-              medium: { id: '', text: row.medium_clue, difficulty: 'medium' as Difficulty },
-              easy:   { id: '', text: row.easy_clue,   difficulty: 'easy'   as Difficulty },
-            },
-          }))
-        );
+      try {
+        const { data } = await supabase.rpc('get_spotlight_movies', params);
+        if (data) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setMovies(
+            (data as any[]).map(row => ({
+              puzzleNumber: 0,
+              movieId: row.movie_id,
+              title: row.title,
+              normalizedTitle: row.normalized_title,
+              altTitles: row.alt_titles ?? [],
+              posterUrl: row.poster_url ?? null,
+              imdbId: row.imdb_id ?? null,
+              releaseYear: row.release_year ?? null,
+              clues: {
+                hard:   { id: '', text: row.hard_clue,   difficulty: 'hard'   as Difficulty },
+                medium: { id: '', text: row.medium_clue, difficulty: 'medium' as Difficulty },
+                easy:   { id: '', text: row.easy_clue,   difficulty: 'easy'   as Difficulty },
+              },
+            }))
+          );
+          setMovieTitles((data as any[]).map((row: any) => row.title));
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   }, [spotlight.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -85,7 +90,7 @@ export function useSpotlightGame(spotlight: SpotlightConfig) {
       completedAt: new Date().toISOString(),
       perMovie: roundOutcomes,
     });
-  }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isComplete]); // isComplete only ever flips true once (no reset path); advance() batches setRoundOutcomes+setCurrentIndex so this render already has final values — eslint-disable-line react-hooks/exhaustive-deps
 
   function submitGuess(guess: string): boolean {
     const puzzle = movies[currentIndex];
@@ -133,6 +138,6 @@ export function useSpotlightGame(spotlight: SpotlightConfig) {
     isComplete,
     submitGuess,
     advance,
-    movieTitles: movies.map(m => m.title),
+    movieTitles,
   };
 }
