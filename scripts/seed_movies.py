@@ -28,6 +28,11 @@ def seed_movie(supabase, tmdb_movie: dict) -> str | None:
     release_date = details.get("release_date") or ""
     release_year = int(release_date[:4]) if len(release_date) >= 4 else 0
 
+    director_name = next(
+        (member['name'] for member in credits.get('crew', []) if member.get('job') == 'Director'),
+        None
+    )
+
     movie_data = {
         "title": details["title"],
         "normalized_title": normalize_title(details["title"]),
@@ -38,6 +43,7 @@ def seed_movie(supabase, tmdb_movie: dict) -> str | None:
         "plot_summary": details.get("overview"),
         "poster_url": poster_url(details.get("poster_path")),
         "genres": [g["name"] for g in details.get("genres", [])],
+        "director_name": director_name,
         "is_active": True,
     }
 
