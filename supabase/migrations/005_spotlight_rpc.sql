@@ -5,6 +5,9 @@ ALTER TABLE movies ADD COLUMN IF NOT EXISTS director_name text;
 DROP FUNCTION IF EXISTS get_spotlight_movies(uuid, text);
 DROP FUNCTION IF EXISTS get_spotlight_movie_count(uuid, text);
 
+-- Index to speed up actor spotlight queries
+CREATE INDEX IF NOT EXISTS idx_cast_actor ON movie_cast(actor_id);
+
 -- Returns all active movies for an actor (by actor_id) or director (by name),
 -- ordered chronologically, each with their best clue per difficulty level.
 CREATE OR REPLACE FUNCTION get_spotlight_movies(
@@ -88,3 +91,7 @@ CREATE OR REPLACE FUNCTION get_spotlight_movie_count(
       (p_director_name IS NOT NULL AND m.director_name = p_director_name)
     );
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
+
+-- Grant execute permissions to anon role
+GRANT EXECUTE ON FUNCTION get_spotlight_movies(uuid, text) TO anon;
+GRANT EXECUTE ON FUNCTION get_spotlight_movie_count(uuid, text) TO anon;
