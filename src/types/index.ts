@@ -85,3 +85,10 @@ export type ActiveFilter =
   | { kind: 'genre';  genreValue: string }
   | { kind: 'decade'; decadeValue: number }
   | { kind: 'pack';   movieIds: string[] };
+
+export interface SpotlightResult {
+  score: number;
+  maxScore: number;
+  completedAt: string; // ISO timestamp
+  perMovie: GameResultType[];
+}
