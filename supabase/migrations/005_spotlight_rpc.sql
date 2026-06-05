@@ -5,8 +5,9 @@ ALTER TABLE movies ADD COLUMN IF NOT EXISTS director_name text;
 DROP FUNCTION IF EXISTS get_spotlight_movies(uuid, text);
 DROP FUNCTION IF EXISTS get_spotlight_movie_count(uuid, text);
 
--- Index to speed up actor spotlight queries
+-- Indexes to speed up spotlight queries
 CREATE INDEX IF NOT EXISTS idx_cast_actor ON movie_cast(actor_id);
+CREATE INDEX IF NOT EXISTS idx_movies_director_name ON movies(director_name);
 
 -- Returns all active movies for an actor (by actor_id) or director (by name),
 -- ordered chronologically, each with their best clue per difficulty level.
