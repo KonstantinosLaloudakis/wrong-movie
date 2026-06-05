@@ -2,20 +2,23 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { SPOTLIGHTS, getSpotlightsByType } from '../config/spotlights';
+import type { SpotlightConfig } from '../config/spotlights';
 import type { SpotlightResult } from '../types';
 
 export function SpotlightPage() {
   const [counts, setCounts] = useState<Record<string, number>>({});
-  const [completions, setCompletions] = useState<Record<string, SpotlightResult | null>>({});
-
-  useEffect(() => {
+  const [completions] = useState<Record<string, SpotlightResult | null>>(() => {
     const loaded: Record<string, SpotlightResult | null> = {};
     for (const s of SPOTLIGHTS) {
-      const raw = localStorage.getItem(`spotlight-result-${s.id}`);
-      loaded[s.id] = raw ? (JSON.parse(raw) as SpotlightResult) : null;
+      try {
+        const raw = localStorage.getItem(`spotlight-result-${s.id}`);
+        loaded[s.id] = raw ? (JSON.parse(raw) as SpotlightResult) : null;
+      } catch {
+        loaded[s.id] = null;
+      }
     }
-    setCompletions(loaded);
-  }, []);
+    return loaded;
+  });
 
   useEffect(() => {
     Promise.all(
@@ -25,12 +28,14 @@ export function SpotlightPage() {
             p_actor_id: s.actorId ?? null,
             p_director_name: s.directorName ?? null,
           })
-          .then(({ data }) => ({ id: s.id, count: (data as number) ?? 0 }))
+          .then(({ data, error }) => ({ id: s.id, count: error ? undefined : (data as number) ?? undefined }))
       )
     ).then(results => {
       const map: Record<string, number> = {};
-      for (const r of results) map[r.id] = r.count;
+      for (const r of results) if (r.count !== undefined) map[r.id] = r.count;
       setCounts(map);
+    }).catch(() => {
+      // counts remain empty; cards show "— movies"
     });
   }, []);
 
@@ -74,7 +79,7 @@ function Section({ title, spotlights, counts, completions }: SectionProps) {
 }
 
 interface CardProps {
-  spotlight: ReturnType<typeof getSpotlightsByType>[number];
+  spotlight: SpotlightConfig;
   count: number | undefined;
   completion: SpotlightResult | null;
 }
