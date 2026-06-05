@@ -70,7 +70,7 @@ def fill_spotlight_actors() -> None:
     for name, uuid in found.items():
         new_content = patch_actor_uuid(content, name, uuid)
         if new_content != content:
-            print(f"  Patched: {name} → {uuid}")
+            print(f"  Patched: {name} -> {uuid}")
             content = new_content
         else:
             print(f"  WARNING: Could not patch pattern for '{name}'")

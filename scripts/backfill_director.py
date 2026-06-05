@@ -48,7 +48,7 @@ def backfill_director() -> None:
                 None,
             )
             supabase.table("movies").update({"director_name": director}).eq("id", m["id"]).execute()
-            print(f"  {m['title']} → {director or '(no director found)'}")
+            print(f"  {m['title']} -> {director or '(no director found)'}")
             updated += 1
             time.sleep(0.15)  # stay within TMDb rate limit
         except Exception as e:
