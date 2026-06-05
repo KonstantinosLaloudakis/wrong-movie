@@ -1,16 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSpotlightById } from '../config/spotlights';
-import { useSpotlightGame, buildSpotlightShareText } from '../hooks/useSpotlightGame';
+import { useSpotlightGame, buildSpotlightShareText, OUTCOME_EMOJI } from '../hooks/useSpotlightGame';
 import { getMovieSuggestions } from '../hooks/useMovieSuggestions';
 import { ClueDisplay } from '../components/ClueDisplay';
 import { GuessInput } from '../components/GuessInput';
 import { ResultOverlay } from '../components/ResultOverlay';
 import type { SpotlightConfig } from '../config/spotlights';
 
-const OUTCOME_EMOJI: Record<string, string> = {
-  hard: '🟢', medium: '🟡', easy: '🟡', miss: '🔴',
-};
 
 export function SpotlightPlayPage() {
   const { id } = useParams<{ id: string }>();
@@ -67,6 +64,11 @@ function SpotlightGame({ spotlight }: { spotlight: SpotlightConfig }) {
     return () => { if (shakeTimer.current) clearTimeout(shakeTimer.current); };
   }, []);
 
+  const handleNext = useCallback(() => {
+    setInputValue('');
+    advance();
+  }, [advance]);
+
   useEffect(() => {
     if (!isDone) return;
     function onKeyDown(e: KeyboardEvent) {
@@ -74,7 +76,7 @@ function SpotlightGame({ spotlight }: { spotlight: SpotlightConfig }) {
     }
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isDone]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isDone, handleNext]);
 
   function handleGuess(guess: string) {
     const correct = submitGuess(guess);
@@ -84,11 +86,6 @@ function SpotlightGame({ spotlight }: { spotlight: SpotlightConfig }) {
       setShaking(true);
       shakeTimer.current = setTimeout(() => setShaking(false), 300);
     }
-  }
-
-  function handleNext() {
-    setInputValue('');
-    advance();
   }
 
   function handleShare() {

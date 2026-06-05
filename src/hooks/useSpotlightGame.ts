@@ -7,7 +7,7 @@ import type { SpotlightConfig } from '../config/spotlights';
 
 const DIFFICULTY_ORDER: Difficulty[] = ['hard', 'medium', 'easy'];
 const POINTS_WITH_MISS: Record<GameResultType, number> = { hard: 3, medium: 2, easy: 1, miss: 0 };
-const OUTCOME_EMOJI: Record<GameResultType, string> = {
+export const OUTCOME_EMOJI: Record<GameResultType, string> = {
   hard: '🟢', medium: '🟡', easy: '🟡', miss: '🔴',
 };
 
