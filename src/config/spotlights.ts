@@ -27,3 +27,11 @@ export function getSpotlightById(id: string): SpotlightConfig | null {
 export function getSpotlightsByType(type: SpotlightType): SpotlightConfig[] {
   return SPOTLIGHTS.filter(s => s.type === type);
 }
+
+if (import.meta.env.DEV) {
+  SPOTLIGHTS.forEach(s => {
+    if (s.actorId === 'REPLACE_WITH_ACTUAL_UUID') {
+      console.warn(`[spotlights] ${s.name}: actorId is still a placeholder — look up the UUID from the actors table`);
+    }
+  });
+}
