@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { HashRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { DailyPage } from './pages/DailyPage';
 import { EndlessPage } from './pages/EndlessPage';
+import { SpotlightPage } from './pages/SpotlightPage';
+import { SpotlightPlayPage } from './pages/SpotlightPlayPage';
 import { StatsModal } from './components/StatsModal';
 import { useStats } from './hooks/useStats';
 import { useEndlessStats } from './hooks/useEndlessStats';
@@ -42,6 +44,16 @@ function AppShell() {
             >
               Endless
             </NavLink>
+            <NavLink
+              to="/spotlight"
+              className={({ isActive }) =>
+                isActive
+                  ? 'rounded-md bg-slate-100 px-3 py-1.5 text-slate-900 dark:bg-slate-700 dark:text-white'
+                  : 'rounded-md px-3 py-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              }
+            >
+              Spotlight
+            </NavLink>
             <button
               aria-label="stats"
               onClick={() => setStatsOpen(true)}
@@ -63,6 +75,8 @@ function AppShell() {
         <Routes>
           <Route path="/" element={<DailyPage onShowStats={() => setStatsOpen(true)} />} />
           <Route path="/play" element={<EndlessPage saveEndlessResult={saveEndlessResult} />} />
+          <Route path="/spotlight" element={<SpotlightPage />} />
+          <Route path="/spotlight/:id" element={<SpotlightPlayPage />} />
         </Routes>
       </main>
       <StatsModal
