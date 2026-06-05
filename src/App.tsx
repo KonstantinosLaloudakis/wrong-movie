@@ -46,6 +46,7 @@ function AppShell() {
             </NavLink>
             <NavLink
               to="/spotlight"
+              end
               className={({ isActive }) =>
                 isActive
                   ? 'rounded-md bg-slate-100 px-3 py-1.5 text-slate-900 dark:bg-slate-700 dark:text-white'
