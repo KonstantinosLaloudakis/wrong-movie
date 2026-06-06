@@ -20,7 +20,7 @@ function AppShell() {
       <header className="border-b border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800">
         <div className="mx-auto flex max-w-lg items-center justify-between">
           <h1 className="font-display text-xl font-black tracking-tight text-slate-900 dark:text-white">
-            🎬 Wrong Movie
+            🎬 Double Take
           </h1>
           <nav className="flex items-center gap-1 text-sm font-semibold">
             <NavLink

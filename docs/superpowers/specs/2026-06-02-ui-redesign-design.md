@@ -5,7 +5,7 @@
 
 ## Summary
 
-Full visual redesign of Wrong Movie in the "Clean & Sharp" direction: light background, colored left-border clue cards, pill difficulty badges, one display font (Fraunces) for the title, and deep slate as the primary accent color. Every surface gets updated — header, game area, result overlay, and stats modal.
+Full visual redesign of Double Take in the "Clean & Sharp" direction: light background, colored left-border clue cards, pill difficulty badges, one display font (Fraunces) for the title, and deep slate as the primary accent color. Every surface gets updated — header, game area, result overlay, and stats modal.
 
 ## Design Decisions
 
@@ -20,7 +20,7 @@ Full visual redesign of Wrong Movie in the "Clean & Sharp" direction: light back
 
 ## Typography
 
-- **Display font:** [Fraunces](https://fonts.google.com/specimen/Fraunces) — variable serif, loaded via Google Fonts. Used only for the "Wrong Movie" header title (`font-weight: 900`).
+- **Display font:** [Fraunces](https://fonts.google.com/specimen/Fraunces) — variable serif, loaded via Google Fonts. Used only for the "Double Take" header title (`font-weight: 900`).
 - **Body font:** `Inter` with system-ui fallback. All other text stays sans-serif.
 - Load via `<link>` in `index.html`:  
   `https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Inter:wght@400;500;600;700&display=swap`

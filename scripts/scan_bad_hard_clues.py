@@ -12,7 +12,7 @@ from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
 
 BATCH_SIZE = 20
 
-EVAL_PROMPT = """You are auditing clues for "Wrong Movie" — a game where hard clues must
+EVAL_PROMPT = """You are auditing clues for "Double Take" — a game where hard clues must
 cryptically describe a famous character from ANOTHER film, not describe the movie being clued.
 
 For each clue below, answer YES if it describes a specific famous character/role from another film,

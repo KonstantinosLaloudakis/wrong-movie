@@ -1,4 +1,4 @@
-# Wrong Movie Implementation Plan
+# Double Take Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -13,7 +13,7 @@
 ## File Map
 
 ```
-wrong-movie/
+double-take/
 ├── .env.example                          # Frontend env var template
 ├── .gitignore
 ├── index.html                            # Vite entry point
@@ -97,7 +97,7 @@ wrong-movie/
 - [ ] **Step 1: Initialise git repo and create project root**
 
 ```bash
-cd C:\workspace\wrong-movie
+cd C:\workspace\double-take
 git init
 ```
 
@@ -118,7 +118,7 @@ scripts/.venv/
 
 ```json
 {
-  "name": "wrong-movie",
+  "name": "double-take",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -168,7 +168,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/wrong-movie/',
+  base: '/double-take/',
   test: {
     environment: 'jsdom',
     globals: true,
@@ -250,7 +250,7 @@ export default {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wrong Movie</title>
+    <title>Double Take</title>
     <meta name="description" content="Guess the movie from clues using famous roles." />
   </head>
   <body>
@@ -289,7 +289,7 @@ echo 'export {}' > src/main.tsx
 npm run dev
 ```
 
-Expected: Vite prints a local URL like `http://localhost:5173/wrong-movie/`. Stop with Ctrl+C.
+Expected: Vite prints a local URL like `http://localhost:5173/double-take/`. Stop with Ctrl+C.
 
 - [ ] **Step 15: Commit**
 
@@ -1084,7 +1084,7 @@ from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL, MIN_CLUE_CONFIDENCE
 
 _client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-PROMPT_TEMPLATE = """You are writing clues for a movie trivia game called "Wrong Movie".
+PROMPT_TEMPLATE = """You are writing clues for a movie trivia game called "Double Take".
 
 Rules:
 - Describe the movie's plot using actors' FAMOUS ROLES from OTHER movies instead of actual character names
@@ -2197,7 +2197,7 @@ function buildShareText(
   difficulty: Difficulty
 ): string {
   const dots = result === 'correct' ? CLUE_TRAIL[difficulty] : '🔴🔴🔴';
-  return `Wrong Movie 🎬 #${puzzleNumber}\n${dots}\nwrongmovie.github.io`;
+  return `Double Take 🎬 #${puzzleNumber}\n${dots}\ndoubletake.github.io`;
 }
 
 interface Props {
@@ -2427,11 +2427,11 @@ import { EndlessPage } from './pages/EndlessPage';
 
 export function App() {
   return (
-    <BrowserRouter basename="/wrong-movie">
+    <BrowserRouter basename="/double-take">
       <div className="min-h-screen bg-gray-50">
         <header className="border-b border-gray-200 bg-white px-4 py-3 shadow-sm">
           <div className="mx-auto flex max-w-lg items-center justify-between">
-            <h1 className="text-lg font-bold text-gray-900">🎬 Wrong Movie</h1>
+            <h1 className="text-lg font-bold text-gray-900">🎬 Double Take</h1>
             <nav className="flex gap-4 text-sm font-medium">
               <NavLink
                 to="/"
@@ -2490,7 +2490,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 npm run dev
 ```
 
-Open `http://localhost:5173/wrong-movie/` in your browser. You should see the header with "Daily" and "Endless" nav links and today's puzzle loading from Supabase.
+Open `http://localhost:5173/double-take/` in your browser. You should see the header with "Daily" and "Endless" nav links and today's puzzle loading from Supabase.
 
 Test the golden path:
 1. Daily page loads a clue
@@ -2498,7 +2498,7 @@ Test the golden path:
 3. Type another wrong answer — third clue appears
 4. Type the correct title — result overlay appears with the movie title and poster
 5. Share button copies emoji grid to clipboard
-6. Navigate to `/wrong-movie/play` — endless mode loads a random movie
+6. Navigate to `/double-take/play` — endless mode loads a random movie
 
 - [ ] **Step 5: Commit**
 
@@ -2516,7 +2516,7 @@ git commit -m "feat: add EndlessPage, App router, and main entry point"
 
 - [ ] **Step 1: Enable GitHub Pages in your repository**
 
-1. Push the repo to GitHub: `git remote add origin https://github.com/YOUR_USERNAME/wrong-movie.git && git push -u origin main`
+1. Push the repo to GitHub: `git remote add origin https://github.com/YOUR_USERNAME/double-take.git && git push -u origin main`
 2. In GitHub: Settings → Pages → Source → **GitHub Actions**
 
 - [ ] **Step 2: Add Supabase secrets to GitHub**
@@ -2584,11 +2584,11 @@ git commit -m "feat: add GitHub Actions deploy workflow"
 git push origin main
 ```
 
-Go to GitHub → Actions tab. The workflow should run and deploy. After ~2 minutes, your site is live at `https://YOUR_USERNAME.github.io/wrong-movie/`.
+Go to GitHub → Actions tab. The workflow should run and deploy. After ~2 minutes, your site is live at `https://YOUR_USERNAME.github.io/double-take/`.
 
 - [ ] **Step 5: Verify the live site**
 
-Open `https://YOUR_USERNAME.github.io/wrong-movie/` in a browser. Test the daily puzzle and endless mode end-to-end on the deployed version.
+Open `https://YOUR_USERNAME.github.io/double-take/` in a browser. Test the daily puzzle and endless mode end-to-end on the deployed version.
 
 ---
 
@@ -2605,8 +2605,8 @@ Create `public/404.html` — GitHub Pages serves this for unknown paths, but we 
 <html>
   <head>
     <script>
-      const path = window.location.pathname.replace('/wrong-movie', '') || '/';
-      window.location.replace('/wrong-movie/#' + path);
+      const path = window.location.pathname.replace('/double-take', '') || '/';
+      window.location.replace('/double-take/#' + path);
     </script>
   </head>
 </html>
@@ -2625,7 +2625,7 @@ export function App() {
       <div className="min-h-screen bg-gray-50">
         <header className="border-b border-gray-200 bg-white px-4 py-3 shadow-sm">
           <div className="mx-auto flex max-w-lg items-center justify-between">
-            <h1 className="text-lg font-bold text-gray-900">🎬 Wrong Movie</h1>
+            <h1 className="text-lg font-bold text-gray-900">🎬 Double Take</h1>
             <nav className="flex gap-4 text-sm font-medium">
               <NavLink
                 to="/"
@@ -2659,7 +2659,7 @@ export function App() {
 }
 ```
 
-The `base` in `vite.config.ts` can remain `/wrong-movie/` for assets.
+The `base` in `vite.config.ts` can remain `/double-take/` for assets.
 
 - [ ] **Step 2: Add loading spinner for guess submission**
 

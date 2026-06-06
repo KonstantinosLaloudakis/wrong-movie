@@ -44,7 +44,7 @@ Replace the entire file content:
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wrong Movie</title>
+    <title>Double Take</title>
     <meta name="description" content="Guess the movie from clues using famous roles." />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -121,7 +121,7 @@ function AppShell() {
       <header className="border-b border-slate-200 bg-white px-4 py-3">
         <div className="mx-auto flex max-w-lg items-center justify-between">
           <h1 className="font-display text-xl font-black tracking-tight text-slate-900">
-            🎬 Wrong Movie
+            🎬 Double Take
           </h1>
           <nav className="flex items-center gap-1 text-sm font-semibold">
             <NavLink
@@ -728,8 +728,8 @@ Expected: zero errors, 47 tests pass.
 npm run dev
 ```
 
-Open `http://localhost:5173/wrong-movie/` and verify:
-1. Header shows "Wrong Movie" in Fraunces serif font
+Open `http://localhost:5173/double-take/` and verify:
+1. Header shows "Double Take" in Fraunces serif font
 2. Nav links have rounded hover/active states
 3. Clue cards have colored left borders and pill badges (no emoji dots)
 4. Streak displays as an orange pill badge

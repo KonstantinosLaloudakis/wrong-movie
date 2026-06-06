@@ -13,7 +13,7 @@ function buildShareText(
   difficulty: Difficulty
 ): string {
   const dots = result === 'correct' ? CLUE_TRAIL[difficulty] : '🔴🔴🔴';
-  return `Wrong Movie 🎬 #${puzzleNumber}\n${dots}\nwrongmovie.github.io`;
+  return `Double Take 🎬 #${puzzleNumber}\n${dots}\ndoubletake.github.io`;
 }
 
 interface Props {

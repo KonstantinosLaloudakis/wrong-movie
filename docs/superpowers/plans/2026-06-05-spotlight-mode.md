@@ -372,7 +372,7 @@ export function buildSpotlightShareText(
   outcomes: GameResultType[]
 ): string {
   const emojiRow = outcomes.map(o => OUTCOME_EMOJI[o]).join('');
-  return `🎬 ${name} Spotlight\n${score}/${maxScore} · wrongmovie.app\n${emojiRow}`;
+  return `🎬 ${name} Spotlight\n${score}/${maxScore} · doubletake.app\n${emojiRow}`;
 }
 
 export function useSpotlightGame(spotlight: SpotlightConfig) {

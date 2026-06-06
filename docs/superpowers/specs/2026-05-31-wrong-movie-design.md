@@ -1,4 +1,4 @@
-# Wrong Movie — Design Spec
+# Double Take — Design Spec
 
 **Date:** 2026-05-31
 **Status:** Approved
@@ -8,7 +8,7 @@
 
 ## Overview
 
-Wrong Movie is a web-based movie trivia quiz game. Players are shown a movie description that uses actors' famous roles from *other* movies instead of the actual characters from the movie being described. The challenge is to recognise the actors and map them back to the correct film.
+Double Take is a web-based movie trivia quiz game. Players are shown a movie description that uses actors' famous roles from *other* movies instead of the actual characters from the movie being described. The challenge is to recognise the actors and map them back to the correct film.
 
 **Example:**
 
@@ -67,10 +67,10 @@ Maximum 3 guesses per movie, one per difficulty tier.
 - Maximum 3 guesses, clues reveal progressively
 - Shareable emoji result grid:
   ```
-  Wrong Movie 🎬 #42
+  Double Take 🎬 #42
   🔴🔴🟢
   Guessed on easy clue - 1pt
-  wrongmovie.github.io
+  doubletake.github.io
   ```
 - Streak and daily completion status stored in localStorage keyed by date
 
@@ -231,7 +231,7 @@ Anthropic Claude Haiku (`claude-haiku-4-5-20251001`) via the Anthropic API (`con
 ### Prompt structure
 
 ```
-You are writing clues for a movie trivia game called "Wrong Movie".
+You are writing clues for a movie trivia game called "Double Take".
 
 Rules:
 - Describe the movie's plot using actors' FAMOUS ROLES from OTHER movies instead of actual character names

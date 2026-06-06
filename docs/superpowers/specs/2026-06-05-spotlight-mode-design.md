@@ -177,7 +177,7 @@ Tom Hanks Spotlight · 18 / 24
 Share text (copy to clipboard):
 ```
 🎬 Tom Hanks Spotlight
-18/24 · wrongmovie.app/spotlight/tom-hanks
+18/24 · doubletake.app/spotlight/tom-hanks
 🟢🟡🟢🔴🟢🟢🟡🟢
 ```
 

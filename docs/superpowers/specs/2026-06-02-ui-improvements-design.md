@@ -7,7 +7,7 @@
 
 ## Overview
 
-Three targeted improvements to the Wrong Movie game UI, in priority order:
+Three targeted improvements to the Double Take game UI, in priority order:
 
 1. **Stats modal** — persistent game history with win rate and clue-level distribution
 2. **Result screen polish** — animated win badge, confetti on Hard solves, Stats shortcut

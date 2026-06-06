@@ -5,7 +5,7 @@ import time
 MIN_CLUE_CONFIDENCE = {"hard": 0.2, "medium": 0.4, "easy": 0.6}
 MIN_FAMOUSNESS_SCORE = 0.10  # used by legacy _get_cast_with_roles only
 
-PROMPT_TEMPLATE = """You are writing clues for "Wrong Movie" — a trivia game where players identify
+PROMPT_TEMPLATE = """You are writing clues for "Double Take" — a trivia game where players identify
 a movie from clues that swap its characters for the actors' famous roles from OTHER movies.
 
 Step 1 — Pick famous roles:

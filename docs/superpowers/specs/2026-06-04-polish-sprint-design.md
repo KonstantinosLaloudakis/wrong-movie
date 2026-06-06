@@ -1,4 +1,4 @@
-# Wrong Movie — Polish Sprint Design Spec
+# Double Take — Polish Sprint Design Spec
 
 **Date:** 2026-06-04
 **Status:** Approved
@@ -8,7 +8,7 @@
 
 ## Overview
 
-Four focused improvements to the existing Wrong Movie app. All changes are additive or extend existing patterns; none require schema migrations or new RPC calls beyond adding two columns to existing ones.
+Four focused improvements to the existing Double Take app. All changes are additive or extend existing patterns; none require schema migrations or new RPC calls beyond adding two columns to existing ones.
 
 ---
 

@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/wrong-movie/',
+  base: '/double-take/',
   test: {
     environment: 'jsdom',
     globals: true,

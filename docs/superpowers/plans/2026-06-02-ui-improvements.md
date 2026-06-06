@@ -138,7 +138,7 @@ describe('computeStats', () => {
 - [ ] **Step 2: Run tests to verify they fail**
 
 ```bash
-cd c:/workspace/wrong-movie && npx vitest run src/hooks/useStats.test.ts
+cd c:/workspace/double-take && npx vitest run src/hooks/useStats.test.ts
 ```
 
 Expected: FAIL — `computeStats` not found.
@@ -597,7 +597,7 @@ function AppShell() {
     <div className="min-h-screen bg-gray-50">
       <header className="border-b border-gray-200 bg-white px-4 py-3 shadow-sm">
         <div className="mx-auto flex max-w-lg items-center justify-between">
-          <h1 className="text-lg font-bold text-gray-900">🎬 Wrong Movie</h1>
+          <h1 className="text-lg font-bold text-gray-900">🎬 Double Take</h1>
           <nav className="flex items-center gap-4 text-sm font-medium">
             <NavLink
               to="/"
@@ -669,7 +669,7 @@ git commit -m "feat(stats): add stats icon to header and wire StatsModal in App"
 - [ ] **Step 1: Install canvas-confetti**
 
 ```bash
-cd c:/workspace/wrong-movie && npm install canvas-confetti && npm install -D @types/canvas-confetti
+cd c:/workspace/double-take && npm install canvas-confetti && npm install -D @types/canvas-confetti
 ```
 
 Expected: package-lock.json updated, no errors.

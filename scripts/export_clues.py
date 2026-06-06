@@ -41,7 +41,7 @@ for m in movies:
     lines.append("")
 
 summary = [
-    f"Wrong Movie — Active Clues Export",
+    f"Double Take — Active Clues Export",
     f"Movies: {eligible} complete / {len(movies)} active",
     f"{'=' * 60}",
     "",
